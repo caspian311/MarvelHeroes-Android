@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Mavel Heroes</string>
+    <string name="iron_man_name">Iron Man</string>
+    <string name="bio_title">Bio:</string>
+    <string name="iron_man_bio">A genius inventor with a crazy gadget for every situation, Iron Man flies in super-powered armor that he designed himself.</string>
 </resources>
