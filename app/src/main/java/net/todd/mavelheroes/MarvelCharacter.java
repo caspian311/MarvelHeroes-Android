@@ -9,6 +9,8 @@ public class MarvelCharacter {
     String name;
     @SerializedName("description")
     String description;
+    @SerializedName("thumbnail")
+    CharacterThumbnail thumbnail;
 
     public MarvelCharacter(String id, String name, String description) {
         this.id = id;
@@ -22,5 +24,9 @@ public class MarvelCharacter {
 
     public String getBio() {
         return description;
+    }
+
+    public String getImagePath() {
+        return thumbnail.getImagePath();
     }
 }

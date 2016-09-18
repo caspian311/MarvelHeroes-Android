@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.annotations.SerializedName;
 
 import org.w3c.dom.Text;
@@ -79,5 +81,8 @@ public class MainActivity extends Activity {
 
         TextView bioTextView = (TextView)findViewById(R.id.bio);
         bioTextView.setText(character.getBio());
+
+        ImageView imageView = (ImageView) findViewById(R.id.character_image);
+        Glide.with(this).load(character.getImagePath()).into(imageView);
     }
 }
