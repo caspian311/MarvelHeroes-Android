@@ -27,52 +27,45 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class MainActivity extends Activity {
+    public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        populateScreen();
+        populateScreen("1009368");
     }
 
-    private void populateScreen() {
-        fetchData().enqueue(new Callback<MarvelCharacterResponse>() {
+    private void populateScreen(String characterId) {
+        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
                 try {
                     if (response.isSuccessful()) {
                         MarvelCharacter character = response.body().data.results[0];
-                        MainActivity.this.bindData(character);
+                        bindData(character);
                     } else {
                         String errorMessage = response.errorBody().string();
                         Toast.makeText(MainActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG);
-                        Log.e(MainActivity.class.toString(), "Error: " + errorMessage);
+                        Log.e(FETCHING_CHARACTER_DATA, "Error: " + errorMessage);
                     }
                 } catch (Exception e){
-                    Log.e(MainActivity.class.toString(), "Error", e);
+                    Log.e(FETCHING_CHARACTER_DATA, "Error", e);
                     Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
-                Log.e(MainActivity.class.toString(), "Error", t);
+                Log.e(FETCHING_CHARACTER_DATA, "Error", t);
                 Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
             }
         });
     }
 
-    private Call<MarvelCharacterResponse> fetchData() {
-        try {
-            String characterId = "1009368";
-            Log.i(MainActivity.class.toString(), "Fetching data for character: " + characterId);
-
-            MarvelAuth auth = new MarvelAuth();
-            return MarvelServiceFactory.getService().getCharacter(characterId, auth.getPublicKey(), auth.getTimestamp(), auth.getHash());
-        } catch (Exception e) {
-            Log.e(MainActivity.this.toString(), "Error", e);
-            throw new RuntimeException(e);
-        }
+    private Call<MarvelCharacterResponse> fetchData(String characterId) {
+        return MarvelServiceFactory.getService().getCharacter(characterId);
     }
 
     private void bindData(MarvelCharacter character) {
