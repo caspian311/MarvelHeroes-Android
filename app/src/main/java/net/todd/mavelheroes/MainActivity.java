@@ -30,7 +30,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        System.out.println("Fetching character from API...");
+        populateScreen();
+    }
+
+    private void populateScreen() {
         fetchData().enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
@@ -57,26 +60,24 @@ public class MainActivity extends Activity {
         });
     }
 
+    private Call<MarvelCharacterResponse> fetchData() {
+        try {
+            String characterId = "1009368";
+            Log.i(MainActivity.class.toString(), "Fetching data for character: " + characterId);
+
+            MarvelAuth auth = new MarvelAuth();
+            return MarvelServiceFactory.getService().getCharacter(characterId, auth.getPublicKey(), auth.getTimestamp(), auth.getHash());
+        } catch (Exception e) {
+            Log.e(MainActivity.this.toString(), "Error", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     private void bindData(MarvelCharacter character) {
         TextView characterNameTextView = (TextView)findViewById(R.id.character_name);
         characterNameTextView.setText(character.getName());
 
         TextView bioTextView = (TextView)findViewById(R.id.bio);
         bioTextView.setText(character.getBio());
-    }
-
-    private Call<MarvelCharacterResponse> fetchData() {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://gateway.marvel.com/v1/public/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            MarvelService service = retrofit.create(MarvelService.class);
-
-            MarvelAuth auth = new MarvelAuth();
-            return service.getCharacter("1009368", auth.getPublicKey(), auth.getTimestamp(), auth.getHash());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
