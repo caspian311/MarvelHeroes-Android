@@ -1,7 +1,6 @@
 package net.todd.mavelheroes;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -9,32 +8,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.annotations.SerializedName;
-
-import org.w3c.dom.Text;
-
-import java.security.MessageDigest;
-import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
-public class MainActivity extends Activity {
+public class CardActivity extends Activity {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
+    public static final String CHARACTER_ID = "character-id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.card_activity);
 
-        populateScreen("1009368");
+        String characterId = getIntent().getStringExtra(CHARACTER_ID);
+        populateScreen(characterId);
     }
 
     private void populateScreen(String characterId) {
@@ -47,19 +36,19 @@ public class MainActivity extends Activity {
                         bindData(character);
                     } else {
                         String errorMessage = response.errorBody().string();
-                        Toast.makeText(MainActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG);
+                        Toast.makeText(CardActivity.this, "Error: " + errorMessage, Toast.LENGTH_LONG);
                         Log.e(FETCHING_CHARACTER_DATA, "Error: " + errorMessage);
                     }
                 } catch (Exception e){
                     Log.e(FETCHING_CHARACTER_DATA, "Error", e);
-                    Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
+                    Toast.makeText(CardActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
                 Log.e(FETCHING_CHARACTER_DATA, "Error", t);
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(CardActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
             }
         });
     }
