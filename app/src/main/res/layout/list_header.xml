@@ -5,7 +5,6 @@
 
     <EditText
         android:id="@+id/search_hero"
-        android:text="Search by name"
         android:textSize="20dp"
         android:textColor="@color/colorPrimaryDark"
         android:background="@color/colorAccent"
@@ -15,6 +14,7 @@
         />
     <Button
         android:text="Search"
+        android:id="@+id/search_button"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorAccent"
         android:textSize="20dp"

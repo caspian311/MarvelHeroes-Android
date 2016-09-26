@@ -27,13 +27,12 @@ public class HeroListAdapter extends ArrayAdapter<MarvelCharacter> {
         TextView textView = (TextView) convertView.findViewById(R.id.hero_name);
         textView.setText(getItem(position).getName());
 
-        convertView.setOnTouchListener(new View.OnTouchListener() {
+        convertView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CardActivity.class);
                 intent.putExtra(CardActivity.CHARACTER_ID, getItem(position).getId());
                 getContext().startActivity(intent);
-                return true;
             }
         });
 

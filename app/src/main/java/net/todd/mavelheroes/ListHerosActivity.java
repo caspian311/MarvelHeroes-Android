@@ -24,10 +24,12 @@ import retrofit2.Response;
 
 public class ListHerosActivity extends Activity {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
+    private static final String NAME_PLACEHOLDER_TEXT = "Search by hero name";
     private HeroListAdapter adapter;
     private String name;
     private static final int limit = 10;
     private int offset;
+    private EditText searchHeroText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +41,45 @@ public class ListHerosActivity extends Activity {
         adapter = new HeroListAdapter(this, new ArrayList<MarvelCharacter>());
         listView.setAdapter(adapter);
         View header = getLayoutInflater().inflate(R.layout.list_header, null);
-        EditText searchHeroText = (EditText)header.findViewById(R.id.search_hero);
+        searchHeroText = (EditText)header.findViewById(R.id.search_hero);
+        searchHeroText.setText(NAME_PLACEHOLDER_TEXT);
+        searchHeroText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && searchHeroText.getText().toString().equals(NAME_PLACEHOLDER_TEXT)) {
+                    searchHeroText.setText("");
+                } else if (!hasFocus && searchHeroText.getText().toString().length() == 0) {
+                    searchHeroText.setText(NAME_PLACEHOLDER_TEXT);
+                }
+            }
+        });
+        Button searchButton = (Button) header.findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                offset = 0;
+                refreshData();
+            }
+        });
 
         View footer = getLayoutInflater().inflate(R.layout.list_footer, null);
         final Button backButton = (Button)footer.findViewById(R.id.list_back);
         backButton.setEnabled(false);
-        backButton.setOnTouchListener(new View.OnTouchListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 offset -= limit;
                 backButton.setEnabled(offset != 0);
                 refreshData();
-                return true;
             }
         });
         Button forwardButton = (Button)footer.findViewById(R.id.list_forward);
-        forwardButton.setOnTouchListener(new View.OnTouchListener() {
+        forwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 offset += limit;
                 backButton.setEnabled(offset != 0);
                 refreshData();
-                return true;
             }
         });
 
@@ -98,7 +117,12 @@ public class ListHerosActivity extends Activity {
         });
     }
 
+    private String getName(){
+        String name = (searchHeroText != null) ? searchHeroText.getText().toString() : null;
+        return (name == null || name.equals(NAME_PLACEHOLDER_TEXT)) ? null : name;
+    }
+
     private Call<MarvelCharacterResponse> fetchData() {
-        return MarvelServiceFactory.getService().listCharacters(limit, offset);
+        return MarvelServiceFactory.getService().listCharacters(getName(), limit, offset);
     }
 }
