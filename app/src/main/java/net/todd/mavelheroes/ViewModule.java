@@ -5,8 +5,4 @@ import dagger.Provides;
 
 @Module
 public class ViewModule {
-    @Provides
-    TeaPot provideStringProvider() {
-        return new TeaPot();
-    }
 }

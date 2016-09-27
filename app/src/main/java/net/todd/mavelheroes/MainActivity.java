@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,13 +18,16 @@ import retrofit2.Response;
 public class MainActivity extends Activity {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
 
+    @Inject
+    ICharacterIdProvider characterIdProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((DaggerApp) getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
         setContentView(R.layout.main_activity);
 
-        populateScreen("1009368");
+        populateScreen(characterIdProvider.getId());
     }
 
     private void populateScreen(String characterId) {

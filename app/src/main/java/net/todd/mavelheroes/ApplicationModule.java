@@ -25,4 +25,9 @@ public class ApplicationModule {
     public Context provideApplicationContext() {
         return daggerApp.getApplicationContext();
     }
+
+    @Provides
+    public ICharacterIdProvider characterIdProvider() {
+        return new CharacterIdProvider();
+    }
 }
