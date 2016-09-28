@@ -3,29 +3,78 @@ package net.todd.mavelheroes;
 
 import android.widget.TextView;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
+import it.cosenonjaviste.daggermock.DaggerMockRule;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = LOLLIPOP, application = DaggerApp.class)
+@Config(constants = BuildConfig.class, sdk = LOLLIPOP, application = TestApp.class)
 public class MainActivityTest {
+    @Mock
+    private MarvelService mockMarvelService;
+    @Mock
+    private Call<MarvelCharacterResponse> mockCall;
+    @Captor
+    private ArgumentCaptor<Callback<MarvelCharacterResponse>> responseArgumentCaptor;
+
+    @Rule
+    public DaggerMockRule<ApplicationComponent> daggerMockRule = new DaggerMockRule<>(ApplicationComponent.class, new ApplicationModule(((TestApp) RuntimeEnvironment.application)))
+            .set(new DaggerMockRule.ComponentSetter<ApplicationComponent>() {
+                @Override
+                public void setComponent(ApplicationComponent applicationComponent) {
+                    ((TestApp) RuntimeEnvironment.application).setComponent(applicationComponent);
+                }
+            });
+
+    @Before
+    public void setUp() {
+        when(mockMarvelService.getCharacter(anyString())).thenReturn(mockCall);
+
+    }
 
     @Test
-    public void testProductionStringIsSet() throws Exception {
+    public void ensureDataIsPopulated() throws Exception {
         ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class);
         MainActivity testObject = controller.create().start().resume().get();
 
-        TextView textView = (TextView) testObject.findViewById(R.id.bio_label);
+        verify(mockCall).enqueue(responseArgumentCaptor.capture());
+        Callback callback = responseArgumentCaptor.getValue();
 
-        assertEquals("Bio:", textView.getText().toString());
+        String characterId = "character id";
+        String characterName = "character id";
+        String bioData = "marvel hero bio";
+
+        Response<MarvelCharacterResponse> response = Response.success(buildMarvelResponse(characterId, characterName, bioData));
+
+        callback.onResponse(null, response);
+
+        TextView textView = (TextView) testObject.findViewById(R.id.bio);
+
+        assertEquals(bioData, textView.getText().toString());
     }
 
-
+    private MarvelCharacterResponse buildMarvelResponse(String id, String name, String bio) {
+        return new MarvelCharacterResponse(new MarvelCharacterData(new MarvelCharacter[]{new MarvelCharacter(id, name, bio)}));
+    }
 }

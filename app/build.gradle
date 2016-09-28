@@ -29,7 +29,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:support-v4:24.0.0'
 
     // for dagger
     apt "com.google.dagger:dagger-compiler:2.2"
@@ -43,5 +42,5 @@ dependencies {
     testCompile "org.robolectric:shadows-support-v4:3.1"
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-all:1.10.19"
-    testCompile 'junit:junit:4.12'
+    testCompile 'com.github.fabioCollini:DaggerMock:0.6.2'
 }

@@ -20,6 +20,8 @@ public class MainActivity extends Activity {
 
     @Inject
     ICharacterIdProvider characterIdProvider;
+    @Inject
+    MarvelService marvelService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +29,11 @@ public class MainActivity extends Activity {
         ((DaggerApp) getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
         setContentView(R.layout.main_activity);
 
-        populateScreen(characterIdProvider.getId());
+        populateScreen();
     }
 
-    private void populateScreen(String characterId) {
-        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
+    private void populateScreen() {
+        fetchData().enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
                 try {
@@ -57,8 +59,8 @@ public class MainActivity extends Activity {
         });
     }
 
-    private Call<MarvelCharacterResponse> fetchData(String characterId) {
-        return MarvelServiceFactory.getService().getCharacter(characterId);
+    private Call<MarvelCharacterResponse> fetchData() {
+        return marvelService.getCharacter(characterIdProvider.getId());
     }
 
     private void bindData(MarvelCharacter character) {
