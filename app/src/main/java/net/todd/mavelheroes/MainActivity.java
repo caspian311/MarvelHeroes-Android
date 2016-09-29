@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
                 try {
                     if (response.isSuccessful()) {
-                        MarvelCharacter character = response.body().data.results[0];
+                        MarvelCharacter character = response.body().getData().getResults()[0];
                         bindData(character);
                     } else {
                         String errorMessage = response.errorBody().string();
