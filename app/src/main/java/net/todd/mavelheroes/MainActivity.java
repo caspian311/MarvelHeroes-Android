@@ -1,7 +1,6 @@
 package net.todd.mavelheroes;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -9,36 +8,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.annotations.SerializedName;
 
-import org.w3c.dom.Text;
-
-import java.security.MessageDigest;
-import java.util.Date;
-import java.util.List;
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public class MainActivity extends Activity {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
 
+    @Inject
+    ICharacterIdProvider characterIdProvider;
+    @Inject
+    MarvelService marvelService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DaggerApp) getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
         setContentView(R.layout.main_activity);
 
-        populateScreen("1009368");
+        populateScreen();
     }
 
-    private void populateScreen(String characterId) {
-        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
+    private void populateScreen() {
+        fetchData().enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
                 try {
@@ -64,8 +59,8 @@ public class MainActivity extends Activity {
         });
     }
 
-    private Call<MarvelCharacterResponse> fetchData(String characterId) {
-        return MarvelServiceFactory.getService().getCharacter(characterId);
+    private Call<MarvelCharacterResponse> fetchData() {
+        return marvelService.getCharacter(characterIdProvider.getId());
     }
 
     private void bindData(MarvelCharacter character) {

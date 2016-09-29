@@ -43,6 +43,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/bio_label"
                 android:text="@string/bio_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
