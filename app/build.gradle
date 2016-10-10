@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 // for dagger
 apply plugin: 'com.neenbedankt.android-apt'
 
+// for kotlin
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 24
@@ -19,6 +21,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
@@ -43,4 +49,7 @@ dependencies {
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-all:1.10.19"
     testCompile 'com.github.fabioCollini:DaggerMock:0.6.2'
+
+    // for kotlin
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.+'
 }
