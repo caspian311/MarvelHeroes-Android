@@ -29,12 +29,12 @@ public class ApplicationModule {
         return daggerApp.getApplicationContext();
     }
 
+    private static final String baseUrl = "https://gateway.marvel.com/v1/public/";
+
     @Provides
     public ICharacterIdProvider characterIdProvider() {
         return new CharacterIdProvider();
     }
-
-    private static final String baseUrl = "https://gateway.marvel.com/v1/public/";
 
     @Provides
     public MarvelService marvelService() {
