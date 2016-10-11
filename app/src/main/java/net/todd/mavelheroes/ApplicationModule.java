@@ -32,11 +32,6 @@ public class ApplicationModule {
     private static final String baseUrl = "https://gateway.marvel.com/v1/public/";
 
     @Provides
-    public ICharacterIdProvider characterIdProvider() {
-        return new CharacterIdProvider();
-    }
-
-    @Provides
     public MarvelService marvelService() {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(new MarvelApiInterceptor())

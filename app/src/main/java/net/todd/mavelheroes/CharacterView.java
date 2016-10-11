@@ -1,6 +1,6 @@
 package net.todd.mavelheroes;
 
-public interface MainView extends PresenterView {
+public interface CharacterView extends PresenterView {
     void populateName(String name);
     void populateBio(String bio);
     void populateImage(String imagePath);

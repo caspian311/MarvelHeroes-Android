@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/character_image"
+                android:src="@drawable/iron_man"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/character_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/iron_man_name"
+                android:background="@drawable/name_background"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/bio_label"
+            android:text="@string/bio_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/bio"
+            android:text="@string/iron_man_bio"
+            android:textSize="20sp"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

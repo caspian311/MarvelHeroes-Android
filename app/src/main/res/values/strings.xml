@@ -3,4 +3,7 @@
     <string name="iron_man_name">Iron Man</string>
     <string name="bio_title">Bio:</string>
     <string name="iron_man_bio">A genius inventor with a crazy gadget for every situation, Iron Man flies in super-powered armor that he designed himself.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
