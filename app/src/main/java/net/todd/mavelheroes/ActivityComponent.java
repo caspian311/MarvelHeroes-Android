@@ -8,4 +8,6 @@ public interface ActivityComponent {
     void inject(MainActivity mainActivity);
 
     void inject(CharacterFragment characterFragment);
+
+    void inject(ComicsActivity comicsActivity);
 }

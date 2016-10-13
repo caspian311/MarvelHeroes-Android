@@ -1,4 +1,4 @@
-package net.todd.mavelheroes
+package net.todd.mavelheroes.net.todd.mavelheroes.data
 
 import com.google.gson.annotations.SerializedName
 

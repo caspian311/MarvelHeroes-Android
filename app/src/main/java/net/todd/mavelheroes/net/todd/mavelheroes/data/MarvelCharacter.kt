@@ -1,6 +1,7 @@
-package net.todd.mavelheroes
+package net.todd.mavelheroes.net.todd.mavelheroes.data
 
 import com.google.gson.annotations.SerializedName
+import net.todd.mavelheroes.CharacterThumbnail
 
 class MarvelCharacter(@SerializedName("id")
                       internal var id: String, name: String, description: String) {

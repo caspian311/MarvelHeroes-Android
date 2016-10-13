@@ -1,5 +1,8 @@
 package net.todd.mavelheroes;
 
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+
 import javax.inject.Inject;
 
 import retrofit2.Call;

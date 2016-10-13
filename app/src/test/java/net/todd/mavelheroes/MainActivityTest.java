@@ -3,6 +3,10 @@ package net.todd.mavelheroes;
 
 import android.widget.TextView;
 
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterData;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
