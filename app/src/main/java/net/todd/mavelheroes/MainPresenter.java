@@ -6,18 +6,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainPresenter extends Presenter<MainView> {
-    private final ICharacterIdProvider characterIdProvider;
+public class MainPresenter extends Presenter<CharacterView> {
     private final MarvelService marvelService;
 
     @Inject
-    public MainPresenter(ICharacterIdProvider characterIdProvider, MarvelService marvelService) {
-        this.characterIdProvider = characterIdProvider;
+    public MainPresenter(MarvelService marvelService) {
         this.marvelService = marvelService;
     }
 
-    public void populateScreen() {
-        fetchData().enqueue(new Callback<MarvelCharacterResponse>() {
+    public void populateScreen(String characterId) {
+        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
                 try {
@@ -42,7 +40,7 @@ public class MainPresenter extends Presenter<MainView> {
         });
     }
 
-    private Call<MarvelCharacterResponse> fetchData() {
-        return marvelService.getCharacter(characterIdProvider.getId());
+    private Call<MarvelCharacterResponse> fetchData(String characterId) {
+        return marvelService.getCharacter(characterId);
     }
 }
