@@ -39,6 +39,6 @@ public class MarvelComic {
     }
 
     public String getThumbnailPath() {
-        return getThumbnail().getPath();
+        return getThumbnail().getPath() + "." + getThumbnail().getExtension();
     }
 }

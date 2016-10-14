@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class CharacterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class ComicsListAdapter extends ArrayAdapter<MarvelComic> {
         ImageView comicImageView = (ImageView) view.findViewById(R.id.comic_thumbnail);
 
         comicTitleView.setText(comic.getTitle());
-        Glide.with(this).load(comic.getThumbnailPath()).into(comicImageView);
+        Glide.with(getContext()).load(comic.getThumbnailPath()).into(comicImageView);
 
         return view;
     }

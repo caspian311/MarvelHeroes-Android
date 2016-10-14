@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = LOLLIPOP, application = TestApp.class)
-public class MainActivityTest {
+public class CharacterActivityTest {
     @Mock
     private MarvelService mockMarvelService;
     @Mock
@@ -59,8 +59,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureDataIsPopulated() throws Exception {
-        ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class);
-        MainActivity testObject = controller.create().start().resume().get();
+        ActivityController<CharacterActivity> controller = Robolectric.buildActivity(CharacterActivity.class);
+        CharacterActivity testObject = controller.create().start().resume().get();
 
         verify(mockCall).enqueue(responseArgumentCaptor.capture());
         Callback callback = responseArgumentCaptor.getValue();

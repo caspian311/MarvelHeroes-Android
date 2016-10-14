@@ -1,6 +1,7 @@
 package net.todd.mavelheroes;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,7 +16,14 @@ import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ComicsActivity extends Activity {
+    private static final String COMIC_ID = "comic.id";
     @Inject
     MarvelService marvelService;
 
@@ -40,6 +48,9 @@ public class ComicsActivity extends Activity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             MarvelComic selectedComic = adapter.getItem(position);
+                            Intent intent = new Intent(ComicsActivity.this, CharacterActivity.class);
+                            intent.putExtra(COMIC_ID, selectedComic.getId());
+                            startActivity(intent);
                         }
                     });
                     comicsListView.setAdapter(adapter);
