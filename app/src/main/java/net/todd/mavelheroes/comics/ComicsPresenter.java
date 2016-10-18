@@ -22,7 +22,13 @@ public class ComicsPresenter extends Presenter<ComicsView> {
     }
 
     public void populateScreen() {
-        marvelService.getComics("1009368").enqueue(new Callback<MarvelComicsResponse>() {
+        /*
+         1009368 -> IronMan
+         1009718 -> Wolverine
+         1009725 -> X-Man
+         1010733 -> Star-Lord
+         */
+        marvelService.getComics("1009725").enqueue(new Callback<MarvelComicsResponse>() {
             @Override
             public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {
                 if (response.isSuccessful()) {
