@@ -3,4 +3,6 @@
     <color name="colorPrimary">#AA0000</color>
     <color name="colorPrimaryDark">#330000</color>
     <color name="colorAccent">#FFFFFF</color>
+    <color name="colorComicRow">#FFFFFF</color>
+    <color name="colorComicText">#000000</color>
 </resources>
