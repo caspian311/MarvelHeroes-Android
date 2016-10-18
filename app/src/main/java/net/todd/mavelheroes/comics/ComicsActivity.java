@@ -39,6 +39,11 @@ public class ComicsActivity extends Activity implements ComicsView {
 
         comicsListView = (ListView) findViewById(R.id.comics_list_view);
         comicsListView.setEmptyView(findViewById(R.id.empty_comics_view));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         comicsPresenter.populateScreen();
     }

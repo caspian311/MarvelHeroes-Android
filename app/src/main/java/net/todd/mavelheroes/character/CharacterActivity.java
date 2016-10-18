@@ -31,9 +31,13 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
         setContentView(R.layout.main_activity);
 
         characterPresenter.setView(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         String comicId = getIntent().getStringExtra(ComicsActivity.COMIC_ID);
-
         characterPresenter.populateCharactersForComic(comicId);
     }
 

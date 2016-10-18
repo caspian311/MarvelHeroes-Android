@@ -42,9 +42,14 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
         ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
 
-        String characterId = getArguments().getString(CHARACTER_ID);
-
         mainPresenter.setView(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String characterId = getArguments().getString(CHARACTER_ID);
         mainPresenter.populateScreen(characterId);
     }
 
