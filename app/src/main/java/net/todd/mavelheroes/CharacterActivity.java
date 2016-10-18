@@ -5,23 +5,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterData;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class CharacterActivity extends AppCompatActivity {
+public class CharacterActivity extends AppCompatActivity implements CharacterView {
+    private static final String FETCHING_CHARACTER_FOR_COMIC_DATA = "Fetching characters ids";
     @Inject
-    MarvelService marvelService;
+    CharacterPresenter characterPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +25,14 @@ public class CharacterActivity extends AppCompatActivity {
 
         setContentView(R.layout.main_activity);
 
+        characterPresenter.setView(this);
+
         String comicId = getIntent().getStringExtra(ComicsActivity.COMIC_ID);
-        marvelService.getCharacterForComic(comicId).enqueue(new Callback<MarvelCharacterResponse>() {
-            @Override
-            public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                List<MarvelCharacter> data = response.body().getData().getResults();
-                List<String> ids = new ArrayList<String>();
-                for (MarvelCharacter character : data) {
-                    ids.add(character.getId());
-                }
-                displayCharacters(ids);
-            }
 
-            @Override
-            public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
-
-            }
-        });
+        characterPresenter.populateCharacersForComic(comicId);
     }
 
-    private void displayCharacters(final List<String> characters) {
+    public void displayCharacters(final List<String> characters) {
         ViewPager pager = (ViewPager) findViewById(R.id.character_pager);
 
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -64,5 +46,16 @@ public class CharacterActivity extends AppCompatActivity {
                 return characters.size();
             }
         });
+    }
+
+
+    public void showError(String errorMessage) {
+        Toast.makeText(this, "Error: " + errorMessage, Toast.LENGTH_LONG);
+        Log.e(FETCHING_CHARACTER_FOR_COMIC_DATA, "Error: " + errorMessage);
+    }
+
+    public void showError(Throwable t) {
+        Log.e(FETCHING_CHARACTER_FOR_COMIC_DATA, "Error", t);
+        Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
     }
 }

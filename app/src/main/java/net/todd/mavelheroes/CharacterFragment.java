@@ -17,12 +17,12 @@ import com.bumptech.glide.Glide;
 import javax.inject.Inject;
 
 
-public class CharacterFragment extends Fragment implements CharacterView {
+public class CharacterFragment extends Fragment implements CharacterFragmentView {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
     private static final String CHARACTER_ID = "character.id";
 
     @Inject
-    CharacterPresenter mainPresenter;
+    CharacterFragmentPresenter mainPresenter;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();

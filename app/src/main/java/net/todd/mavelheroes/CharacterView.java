@@ -1,10 +1,11 @@
 package net.todd.mavelheroes;
 
+import java.util.List;
+
 public interface CharacterView extends PresenterView {
-    void populateName(String name);
-    void populateBio(String bio);
-    void populateImage(String imagePath);
+    void displayCharacters(final List<String> characters);
+
+    void showError(Throwable t);
 
     void showError(String string);
-    void showError(Throwable t);
 }
