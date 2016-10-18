@@ -20,22 +20,26 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
     }
 
     public void populateScreen(String characterId) {
+        getView().showWaiting();
+
         fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                    if (response.isSuccessful()) {
-                        MarvelCharacter character = response.body().getData().getResults().get(0);
+                getView().hideWaiting();
 
-                        getView().populateName(character.getName());
-                        getView().populateBio(character.getDescription());
-                        getView().populateImage(character.getImagePath());
-                    } else {
-                        try {
-                            getView().showError(response.errorBody().string());
-                        } catch (Exception e) {
-                            getView().showError(e);
-                        }
+                if (response.isSuccessful()) {
+                    MarvelCharacter character = response.body().getData().getResults().get(0);
+
+                    getView().populateName(character.getName());
+                    getView().populateBio(character.getDescription());
+                    getView().populateImage(character.getImagePath());
+                } else {
+                    try {
+                        getView().showError(response.errorBody().string());
+                    } catch (Exception e) {
+                        getView().showError(e);
                     }
+                }
             }
 
             @Override

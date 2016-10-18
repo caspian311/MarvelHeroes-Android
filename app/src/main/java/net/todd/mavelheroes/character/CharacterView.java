@@ -8,6 +8,5 @@ public interface CharacterView extends PresenterView {
     void displayCharacters(final List<String> characters);
 
     void showError(Throwable t);
-
     void showError(String string);
 }

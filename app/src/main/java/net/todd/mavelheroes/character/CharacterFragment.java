@@ -87,4 +87,16 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
         Log.e(FETCHING_CHARACTER_DATA, "Error", t);
         Toast.makeText(this.getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG);
     }
+
+    @Override
+    public void showWaiting() {
+        getView().findViewById(R.id.character_ready_now).setVisibility(View.GONE);
+        getView().findViewById(R.id.character_not_ready_yet).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWaiting() {
+        getView().findViewById(R.id.character_ready_now).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.character_not_ready_yet).setVisibility(View.GONE);
+    }
 }
