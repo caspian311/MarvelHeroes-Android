@@ -9,11 +9,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainPresenter extends Presenter<CharacterView> {
+public class CharacterPresenter extends Presenter<CharacterView> {
     private final MarvelService marvelService;
 
     @Inject
-    public MainPresenter(MarvelService marvelService) {
+    public CharacterPresenter(MarvelService marvelService) {
         this.marvelService = marvelService;
     }
 
@@ -21,19 +21,19 @@ public class MainPresenter extends Presenter<CharacterView> {
         fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                try {
                     if (response.isSuccessful()) {
-                        MarvelCharacter character = response.body().getData().getResults()[0];
+                        MarvelCharacter character = response.body().getData().getResults().get(0);
 
                         getView().populateName(character.getName());
-                        getView().populateBio(character.getBio());
+                        getView().populateBio(character.getDescription());
                         getView().populateImage(character.getImagePath());
                     } else {
-                        getView().showError(response.errorBody().string());
+                        try {
+                            getView().showError(response.errorBody().string());
+                        } catch (Exception e) {
+                            getView().showError(e);
+                        }
                     }
-                } catch (Exception e){
-                    getView().showError(e);
-                }
             }
 
             @Override

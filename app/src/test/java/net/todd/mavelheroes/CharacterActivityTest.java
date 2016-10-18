@@ -3,6 +3,7 @@ package net.todd.mavelheroes;
 
 import android.widget.TextView;
 
+import net.todd.mavelheroes.net.todd.mavelheroes.data.CharacterThumbnail;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterData;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
@@ -19,6 +20,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
+
+import java.util.Arrays;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import retrofit2.Call;
@@ -79,6 +82,6 @@ public class CharacterActivityTest {
     }
 
     private MarvelCharacterResponse buildMarvelResponse(String id, String name, String bio) {
-        return new MarvelCharacterResponse(new MarvelCharacterData(new MarvelCharacter[]{new MarvelCharacter(id, name, bio)}));
+        return new MarvelCharacterResponse(new MarvelCharacterData(Arrays.asList(new MarvelCharacter(id, name, bio, new CharacterThumbnail("", "")))));
     }
 }

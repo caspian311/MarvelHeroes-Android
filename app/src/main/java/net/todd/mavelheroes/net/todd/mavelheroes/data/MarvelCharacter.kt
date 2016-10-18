@@ -1,21 +1,19 @@
 package net.todd.mavelheroes.net.todd.mavelheroes.data
 
-import com.google.gson.annotations.SerializedName
+class MarvelCharacter {
+    var id: String? = null
+    var name: String? = null
+    var description: String? = null
+    var thumbnail: CharacterThumbnail? = null
 
-class MarvelCharacter(@SerializedName("id")
-                      internal var id: String, name: String, description: String) {
-    @SerializedName("name")
-    var name: String
-        internal set
-    @SerializedName("description")
-    var bio: String
-        internal set
-    @SerializedName("thumbnail")
-    internal var thumbnail: CharacterThumbnail? = null
+    constructor() {
+    }
 
-    init {
+    constructor(id: String, name: String, description: String, thumbnail: CharacterThumbnail) {
+        this.id = id
         this.name = name
-        this.bio = description
+        this.description = description
+        this.thumbnail = thumbnail
     }
 
     val imagePath: String

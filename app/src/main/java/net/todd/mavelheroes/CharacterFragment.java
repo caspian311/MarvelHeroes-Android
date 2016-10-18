@@ -22,7 +22,7 @@ public class CharacterFragment extends Fragment implements CharacterView {
     private static final String CHARACTER_ID = "character.id";
 
     @Inject
-    MainPresenter mainPresenter;
+    CharacterPresenter mainPresenter;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();

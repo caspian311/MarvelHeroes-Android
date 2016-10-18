@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
@@ -22,10 +24,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ComicsActivity extends Activity {
-    private static final String COMIC_ID = "comic.id";
+public class ComicsActivity extends Activity implements ComicsView {
+    public static final String COMIC_ID = "comic.id";
+    private static final String FETCHING_COMIC_DATA = "Fetching comic data";
+
     @Inject
-    MarvelService marvelService;
+    ComicsPresenter comicsPresenter;
+
+    private ListView comicsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,35 +40,43 @@ public class ComicsActivity extends Activity {
 
         setContentView(R.layout.comics_activity);
 
-        final ListView comicsListView = (ListView) findViewById(R.id.comics_list_view);
+        comicsPresenter.setView(this);
+
+        comicsListView = (ListView) findViewById(R.id.comics_list_view);
         comicsListView.setEmptyView(findViewById(R.id.empty_comics_view));
 
-        marvelService.getComics().enqueue(new Callback<MarvelComicsResponse>() {
-            @Override
-            public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {
-                try {
-                    List<MarvelComic> comics = response.body().getData().getResults();
+        comicsPresenter.populateScreen();
+    }
 
-                    final ComicsListAdapter adapter = new ComicsListAdapter(ComicsActivity.this, R.layout.comic_row, comics);
-                    comicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            MarvelComic selectedComic = adapter.getItem(position);
-                            Intent intent = new Intent(ComicsActivity.this, CharacterActivity.class);
-                            intent.putExtra(COMIC_ID, selectedComic.getId());
-                            startActivity(intent);
-                        }
-                    });
-                    comicsListView.setAdapter(adapter);
-                } catch(Exception e) {
-                    // handle error
-                }
-            }
-
+    @Override
+    public void setComics(List<MarvelComic> comics) {
+        final ComicsListAdapter adapter = new ComicsListAdapter(ComicsActivity.this, R.layout.comic_row, comics);
+        comicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onFailure(Call<MarvelComicsResponse> call, Throwable t) {
-                // handle error
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MarvelComic selectedComic = adapter.getItem(position);
+                comicsPresenter.selectComic(selectedComic.getId());
             }
         });
+        comicsListView.setAdapter(adapter);
+    }
+
+    @Override
+    public void goToComic(String comicId) {
+        Intent intent = new Intent(ComicsActivity.this, CharacterActivity.class);
+        intent.putExtra(COMIC_ID, comicId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showError(Throwable t) {
+        Log.e(FETCHING_COMIC_DATA, "Error", t);
+        Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        Log.e(FETCHING_COMIC_DATA, "Error: " + errorMessage);
+        Toast.makeText(this, "Error: " + errorMessage, Toast.LENGTH_LONG);
     }
 }
