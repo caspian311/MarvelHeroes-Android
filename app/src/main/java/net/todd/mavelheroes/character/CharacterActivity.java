@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.character;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
+import net.todd.mavelheroes.ActivityModule;
+import net.todd.mavelheroes.DaggerApp;
+import net.todd.mavelheroes.R;
+import net.todd.mavelheroes.comics.ComicsActivity;
 
 import java.util.List;
 
@@ -29,7 +34,7 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
 
         String comicId = getIntent().getStringExtra(ComicsActivity.COMIC_ID);
 
-        characterPresenter.populateCharacersForComic(comicId);
+        characterPresenter.populateCharactersForComic(comicId);
     }
 
     public void displayCharacters(final List<String> characters) {

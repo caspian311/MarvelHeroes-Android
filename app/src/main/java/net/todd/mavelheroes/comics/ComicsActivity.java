@@ -1,28 +1,23 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.comics;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.ActivityModule;
+import net.todd.mavelheroes.DaggerApp;
+import net.todd.mavelheroes.R;
+import net.todd.mavelheroes.character.CharacterActivity;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsData;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ComicsActivity extends Activity implements ComicsView {
     public static final String COMIC_ID = "comic.id";

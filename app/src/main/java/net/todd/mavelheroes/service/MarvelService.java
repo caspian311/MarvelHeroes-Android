@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.service;
 
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;

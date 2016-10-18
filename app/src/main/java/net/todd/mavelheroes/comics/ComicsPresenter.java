@@ -1,11 +1,9 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.comics;
 
-import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
-
+import net.todd.mavelheroes.Presenter;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;
+import net.todd.mavelheroes.service.MarvelService;
 
 import java.util.List;
 

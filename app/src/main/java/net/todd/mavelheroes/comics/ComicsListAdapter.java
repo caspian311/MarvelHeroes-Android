@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.comics;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import net.todd.mavelheroes.R;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
 
 import java.util.List;

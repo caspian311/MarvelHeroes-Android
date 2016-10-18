@@ -1,4 +1,6 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.character;
+
+import net.todd.mavelheroes.PresenterView;
 
 import java.util.List;
 

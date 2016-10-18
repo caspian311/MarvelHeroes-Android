@@ -1,7 +1,9 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.character;
 
+import net.todd.mavelheroes.Presenter;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
 import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.service.MarvelService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class CharacterPresenter extends Presenter<CharacterView> {
         this.marvelService = marvelService;
     }
 
-    public void populateCharacersForComic(String comicId) {
+    public void populateCharactersForComic(String comicId) {
         marvelService.getCharacterForComic(comicId).enqueue(new Callback<MarvelCharacterResponse>() {
             @Override
             public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {

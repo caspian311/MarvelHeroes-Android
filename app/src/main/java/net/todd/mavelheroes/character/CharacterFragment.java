@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.character;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import net.todd.mavelheroes.ActivityModule;
+import net.todd.mavelheroes.DaggerApp;
+import net.todd.mavelheroes.R;
 
 import javax.inject.Inject;
 
