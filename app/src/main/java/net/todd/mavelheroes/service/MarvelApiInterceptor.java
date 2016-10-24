@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.service;
 
 import java.io.IOException;
 

@@ -2,6 +2,10 @@ package net.todd.mavelheroes;
 
 import android.content.Context;
 
+import net.todd.mavelheroes.service.ApiLoggerInterceptor;
+import net.todd.mavelheroes.service.MarvelApiInterceptor;
+import net.todd.mavelheroes.service.MarvelService;
+
 import javax.inject.Named;
 
 import dagger.Module;

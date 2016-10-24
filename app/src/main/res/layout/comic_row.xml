@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="@drawable/comic_row_gradient">
+
+    <ImageView
+        android:id="@+id/comic_thumbnail"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        />
+
+    <TextView
+        android:id="@+id/comic_title"
+        android:text="placeholder_text"
+        android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -3,6 +3,11 @@ package net.todd.mavelheroes;
 
 import android.widget.TextView;
 
+import net.todd.mavelheroes.net.todd.mavelheroes.data.CharacterThumbnail;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterData;
+import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +20,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
+
+import java.util.Arrays;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import retrofit2.Call;
@@ -30,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = LOLLIPOP, application = TestApp.class)
-public class MainActivityTest {
+public class CharacterActivityTest {
     @Mock
     private MarvelService mockMarvelService;
     @Mock
@@ -55,8 +62,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureDataIsPopulated() throws Exception {
-        ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class);
-        MainActivity testObject = controller.create().start().resume().get();
+        ActivityController<CharacterActivity> controller = Robolectric.buildActivity(CharacterActivity.class);
+        CharacterActivity testObject = controller.create().start().resume().get();
 
         verify(mockCall).enqueue(responseArgumentCaptor.capture());
         Callback callback = responseArgumentCaptor.getValue();
@@ -75,6 +82,6 @@ public class MainActivityTest {
     }
 
     private MarvelCharacterResponse buildMarvelResponse(String id, String name, String bio) {
-        return new MarvelCharacterResponse(new MarvelCharacterData(new MarvelCharacter[]{new MarvelCharacter(id, name, bio)}));
+        return new MarvelCharacterResponse(new MarvelCharacterData(Arrays.asList(new MarvelCharacter(id, name, bio, new CharacterThumbnail("", "")))));
     }
 }

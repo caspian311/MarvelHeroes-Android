@@ -1,4 +1,4 @@
-package net.todd.mavelheroes;
+package net.todd.mavelheroes.character;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,15 +14,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import net.todd.mavelheroes.ActivityModule;
+import net.todd.mavelheroes.DaggerApp;
+import net.todd.mavelheroes.R;
+
 import javax.inject.Inject;
 
 
-public class CharacterFragment extends Fragment implements CharacterView {
+public class CharacterFragment extends Fragment implements CharacterFragmentView {
     public static final String FETCHING_CHARACTER_DATA = "Fetching character data";
     private static final String CHARACTER_ID = "character.id";
 
     @Inject
-    MainPresenter mainPresenter;
+    CharacterFragmentPresenter mainPresenter;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -38,9 +42,14 @@ public class CharacterFragment extends Fragment implements CharacterView {
 
         ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
 
-        String characterId = getArguments().getString(CHARACTER_ID);
-
         mainPresenter.setView(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String characterId = getArguments().getString(CHARACTER_ID);
         mainPresenter.populateScreen(characterId);
     }
 
@@ -77,5 +86,17 @@ public class CharacterFragment extends Fragment implements CharacterView {
     public void showError(Throwable t) {
         Log.e(FETCHING_CHARACTER_DATA, "Error", t);
         Toast.makeText(this.getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void showWaiting() {
+        getView().findViewById(R.id.character_ready_now).setVisibility(View.GONE);
+        getView().findViewById(R.id.character_not_ready_yet).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWaiting() {
+        getView().findViewById(R.id.character_ready_now).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.character_not_ready_yet).setVisibility(View.GONE);
     }
 }
