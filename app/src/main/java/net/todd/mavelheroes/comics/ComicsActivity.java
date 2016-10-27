@@ -3,6 +3,8 @@ package net.todd.mavelheroes.comics;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,7 +28,7 @@ public class ComicsActivity extends Activity implements ComicsView {
     @Inject
     ComicsPresenter comicsPresenter;
 
-    private ListView comicsListView;
+    private ComicsViewHolderAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,17 @@ public class ComicsActivity extends Activity implements ComicsView {
 
         comicsPresenter.setView(this);
 
-        comicsListView = (ListView) findViewById(R.id.comics_list_view);
-        comicsListView.setEmptyView(findViewById(R.id.empty_comics_view));
+        RecyclerView comicsListView = (RecyclerView) findViewById(R.id.comics_list_view);
+        comicsListView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new ComicsViewHolderAdapter(new ItemClickedListener() {
+            @Override
+            public void itemClicked(int position) {
+                String selectedComicId = adapter.getComic(position).getId();
+                comicsPresenter.selectComic(selectedComicId);
+            }
+        });
+        comicsListView.setAdapter(adapter);
     }
 
     @Override
@@ -49,16 +60,20 @@ public class ComicsActivity extends Activity implements ComicsView {
     }
 
     @Override
+    public void showEmptyView() {
+//        findViewById(R.id.empty_comics_view).setVisibility(View.VISIBLE);
+//        findViewById(R.id.comics_list_view).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideEmptyView() {
+//        findViewById(R.id.empty_comics_view).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.comics_list_view).setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void setComics(List<MarvelComic> comics) {
-        final ComicsListAdapter adapter = new ComicsListAdapter(ComicsActivity.this, R.layout.comic_row, comics);
-        comicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MarvelComic selectedComic = adapter.getItem(position);
-                comicsPresenter.selectComic(selectedComic.getId());
-            }
-        });
-        comicsListView.setAdapter(adapter);
+        adapter.addAll(comics);
     }
 
     @Override

@@ -28,11 +28,14 @@ public class ComicsPresenter extends Presenter<ComicsView> {
          1009725 -> X-Man
          1010733 -> Star-Lord
          */
+        getView().showEmptyView();
         marvelService.getComics("1009725").enqueue(new Callback<MarvelComicsResponse>() {
+
             @Override
             public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {
                 if (response.isSuccessful()) {
                     List<MarvelComic> comics = response.body().getData().getResults();
+                    getView().hideEmptyView();
                     getView().setComics(comics);
 
                 } else {
