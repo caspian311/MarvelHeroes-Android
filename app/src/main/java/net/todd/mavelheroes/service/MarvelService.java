@@ -1,7 +1,7 @@
 package net.todd.mavelheroes.service;
 
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;
+import net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.data.MarvelComicsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

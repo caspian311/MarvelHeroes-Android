@@ -1,7 +1,7 @@
 package net.todd.mavelheroes.comics;
 
 import net.todd.mavelheroes.PresenterView;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComic;
 
 import java.util.List;
 

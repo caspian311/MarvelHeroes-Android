@@ -1,7 +1,6 @@
 package net.todd.mavelheroes.comics;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.todd.mavelheroes.R;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComic;
 
 public class MarvelComicViewHolder extends RecyclerView.ViewHolder {
     private final ImageView comicImageView;
@@ -31,6 +30,6 @@ public class MarvelComicViewHolder extends RecyclerView.ViewHolder {
 
     public void bindView(MarvelComic comic) {
         comicTitleView.setText(comic.getTitle());
-        Glide.with(comicImageView.getContext().getApplicationContext()).load(comic.getThumbnailPath()).into(comicImageView);
+        Glide.with(comicImageView.getContext().getApplicationContext()).load(comic.getThumbnail()).into(comicImageView);
     }
 }

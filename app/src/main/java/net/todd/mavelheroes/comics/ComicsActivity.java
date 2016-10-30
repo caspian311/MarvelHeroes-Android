@@ -15,7 +15,7 @@ import net.todd.mavelheroes.ActivityModule;
 import net.todd.mavelheroes.DaggerApp;
 import net.todd.mavelheroes.R;
 import net.todd.mavelheroes.character.CharacterActivity;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComic;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package net.todd.mavelheroes.character;
 
 import net.todd.mavelheroes.Presenter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.data.MarvelCharacter;
+import net.todd.mavelheroes.data.MarvelCharacterResponse;
 import net.todd.mavelheroes.service.MarvelService;
 
 import javax.inject.Inject;
