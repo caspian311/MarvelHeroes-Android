@@ -12,9 +12,9 @@ public interface MarvelService {
     @GET("characters/{character_id}")
     Call<MarvelCharacterResponse> getCharacter(@Path("character_id") String characterId);
 
-    @GET("comics/{commic_id}/characters")
+    @GET("series/{commic_id}/characters")
     Call<MarvelCharacterResponse> getCharacterForComic(@Path("commic_id") String comicId);
 
-    @GET("comics")
+    @GET("series")
     Call<MarvelComicsResponse> getComics(@Query("characters")String characterId);
 }

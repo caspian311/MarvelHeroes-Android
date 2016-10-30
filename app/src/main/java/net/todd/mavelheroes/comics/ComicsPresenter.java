@@ -29,7 +29,7 @@ public class ComicsPresenter extends Presenter<ComicsView> {
          1010733 -> Star-Lord
          */
         getView().showEmptyView();
-        marvelService.getComics("1009725").enqueue(new Callback<MarvelComicsResponse>() {
+        marvelService.getComics("1009368").enqueue(new Callback<MarvelComicsResponse>() {
 
             @Override
             public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {
