@@ -61,14 +61,14 @@ public class ComicsActivity extends Activity implements ComicsView {
 
     @Override
     public void showEmptyView() {
-//        findViewById(R.id.empty_comics_view).setVisibility(View.VISIBLE);
-//        findViewById(R.id.comics_list_view).setVisibility(View.INVISIBLE);
+        findViewById(R.id.empty_comics_view).setVisibility(View.VISIBLE);
+        findViewById(R.id.comics_list_view).setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideEmptyView() {
-//        findViewById(R.id.empty_comics_view).setVisibility(View.INVISIBLE);
-//        findViewById(R.id.comics_list_view).setVisibility(View.VISIBLE);
+        findViewById(R.id.empty_comics_view).setVisibility(View.INVISIBLE);
+        findViewById(R.id.comics_list_view).setVisibility(View.VISIBLE);
     }
 
     @Override

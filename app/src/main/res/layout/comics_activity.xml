@@ -10,25 +10,23 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/comics_list_view"
         android:layout_width="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="5dp"
         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/empty_comics_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:orientation="vertical"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_height="match_parent">-->
+    <LinearLayout
+        android:id="@+id/empty_comics_view"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="match_parent">
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textSize="30dp"-->
-            <!--android:textColor="@color/colorAccent"-->
-            <!--android:text="@string/no_comics_yet"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30dp"
+            android:textColor="@color/colorAccent"
+            android:text="@string/no_comics_yet"/>
 
-    <!--</LinearLayout>-->
+    </LinearLayout>
 
 </FrameLayout>
