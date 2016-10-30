@@ -13,4 +13,8 @@ public interface ComicsView extends PresenterView {
     void showError(Throwable throwable);
 
     void showError(String string);
+
+    void hideEmptyView();
+
+    void showEmptyView();
 }
