@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import net.todd.mavelheroes.ActivityModule;
@@ -32,6 +31,7 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
         setContentView(R.layout.main_activity);
 
         characterPresenter.setView(this);
+
     }
 
     @Override
@@ -40,6 +40,11 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
 
         String comicId = getIntent().getStringExtra(ComicsActivity.COMIC_ID);
         characterPresenter.populateCharactersForComic(comicId);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public void displayCharacters(final List<String> characters) {

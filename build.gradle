@@ -10,6 +10,9 @@ buildscript {
         // for dagger
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
+        // for Java 1.8-ish things
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
+
         // kotlin
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.+'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"

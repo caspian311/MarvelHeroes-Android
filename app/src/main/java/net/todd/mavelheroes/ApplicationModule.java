@@ -2,6 +2,7 @@ package net.todd.mavelheroes;
 
 import android.content.Context;
 
+import net.todd.mavelheroes.db.ObservableDatabase;
 import net.todd.mavelheroes.service.ApiLoggerInterceptor;
 import net.todd.mavelheroes.service.MarvelApiInterceptor;
 import net.todd.mavelheroes.service.MarvelService;
@@ -49,5 +50,10 @@ public class ApplicationModule {
                 .build();
 
         return retrofit.create(MarvelService.class);
+    }
+
+    @Provides
+    public ObservableDatabase observableDatabase() {
+        return new ObservableDatabase(provideApplicationContext());
     }
 }

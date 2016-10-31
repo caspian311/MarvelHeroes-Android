@@ -25,11 +25,11 @@ public class ComicsPresenter extends Presenter<ComicsView> {
         /*
          1009368 -> IronMan
          1009718 -> Wolverine
-         1009725 -> X-Man
+         1009718 -> X-Man
          1010733 -> Star-Lord
          */
         getView().showEmptyView();
-        marvelService.getComics("1009368").enqueue(new Callback<MarvelComicsResponse>() {
+        marvelService.getComics("1009368,1009718,1009718,1010733").enqueue(new Callback<MarvelComicsResponse>() {
 
             @Override
             public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {

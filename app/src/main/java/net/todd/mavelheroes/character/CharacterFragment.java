@@ -17,8 +17,13 @@ import com.bumptech.glide.Glide;
 import net.todd.mavelheroes.ActivityModule;
 import net.todd.mavelheroes.DaggerApp;
 import net.todd.mavelheroes.R;
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.db.ObservableDatabase;
 
 import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class CharacterFragment extends Fragment implements CharacterFragmentView {
@@ -27,6 +32,10 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
     @Inject
     CharacterFragmentPresenter mainPresenter;
+    @Inject
+    ObservableDatabase observableDatabase;
+
+    private CompositeSubscription subscription;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -50,7 +59,28 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
         super.onResume();
 
         String characterId = getArguments().getString(CHARACTER_ID);
+
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        subscription = new CompositeSubscription();
+        subscription.add(observableDatabase.favoriteCharacter(characterId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateFavorite));
+
         mainPresenter.populateScreen(characterId);
+    }
+
+    private void updateFavorite(FavoriteCharacter favoriteCharacter) {
+        // TODO finish up UI
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        subscription.unsubscribe();
+        subscription = null;
     }
 
     @Override

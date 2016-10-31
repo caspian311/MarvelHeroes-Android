@@ -15,4 +15,5 @@ public interface CharacterFragmentView extends PresenterView {
 
     void showWaiting();
     void hideWaiting();
+
 }

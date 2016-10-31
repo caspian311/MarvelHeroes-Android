@@ -1,0 +1,40 @@
+package net.todd.mavelheroes.db;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.data.MarvelCharacter;
+
+public class MarvelDbOpenHelper extends SQLiteOpenHelper{
+    private static final String DB_NAME = "MarvelComics.db";
+    public static final int VERSION = 1;
+
+    public MarvelDbOpenHelper(Context context) {
+        super(context, DB_NAME, null, VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL.CREATE_FAVORITES_SQL);
+    }
+
+    private static class SQL {
+        private static final String CREATE_FAVORITES_SQL;
+        static {
+            CREATE_FAVORITES_SQL = new StringBuilder()
+                    .append("CREATE TABLE ").append(FavoriteCharacter.Entity.TABLE_NAME).append(" (")
+                    .append(FavoriteCharacter.Entity._ID).append(" INTEGER PRIMARY KEY,")
+                    .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT")
+                    .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT,")
+                    .append(")")
+                    .toString();
+        }
+    }
+}

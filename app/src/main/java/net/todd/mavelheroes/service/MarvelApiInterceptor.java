@@ -18,6 +18,7 @@ public class MarvelApiInterceptor implements Interceptor {
                 .addQueryParameter("ts", auth.getTimestamp())
                 .addQueryParameter("apikey", auth.getPublicKey())
                 .addQueryParameter("hash", auth.getHash())
+                .addQueryParameter("limit", "100")
                 .build();
 
         Request newRequest = new Request.Builder().url(newUrl).build();
