@@ -17,12 +17,11 @@ public class MarvelDbOpenHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(SQL.CREATE_FAVORITES_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL.CREATE_FAVORITES_SQL);
     }
 
     private static class SQL {
@@ -30,9 +29,9 @@ public class MarvelDbOpenHelper extends SQLiteOpenHelper{
         static {
             CREATE_FAVORITES_SQL = new StringBuilder()
                     .append("CREATE TABLE ").append(FavoriteCharacter.Entity.TABLE_NAME).append(" (")
-                    .append(FavoriteCharacter.Entity._ID).append(" INTEGER PRIMARY KEY,")
-                    .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT")
-                    .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT,")
+                    .append(FavoriteCharacter.Entity._ID).append(" INTEGER PRIMARY KEY, ")
+                    .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT ")
+                    .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT ")
                     .append(")")
                     .toString();
         }
