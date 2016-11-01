@@ -22,7 +22,10 @@ public class ObservableDatabase {
     }
 
     public void addFavorite(ContentValues contentValues) {
-        briteDatabase.insert(FavoriteCharacter.Entity.TABLE_NAME, contentValues);
+        String characterId = contentValues.getAsString(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID);
+        if (briteDatabase.update(FavoriteCharacter.Entity.TABLE_NAME, contentValues, "character_id = ?", characterId) == 0) {
+            briteDatabase.insert(FavoriteCharacter.Entity.TABLE_NAME, contentValues);
+        }
     }
 
     public void removeFavorite(String characterId) {

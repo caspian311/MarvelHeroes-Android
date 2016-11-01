@@ -33,7 +33,8 @@ public class MarvelDbOpenHelper extends SQLiteOpenHelper{
                     .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT, ")
                     .append(FavoriteCharacter.Entity.COLUMN_IMAGE_URL).append(" TEXT, ")
                     .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT, ")
-                    .append(FavoriteCharacter.Entity.COLUMN_BIO).append(" TEXT ")
+                    .append(FavoriteCharacter.Entity.COLUMN_BIO).append(" TEXT, ")
+                    .append(FavoriteCharacter.Entity.COLUMN_FAVORITE).append(" INTEGER ")
                     .append(")")
                     .toString();
         }

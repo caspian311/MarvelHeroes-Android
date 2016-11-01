@@ -3,13 +3,11 @@ package net.todd.mavelheroes.character;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -47,6 +45,7 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     private String characterImageUrl;
     private String characterId;
     private View.OnClickListener fabClickListener;
+    private boolean characterFavorite;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -81,17 +80,25 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     }
 
     public void favoriteToggle() {
+        this.characterFavorite = !this.characterFavorite;
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, this.characterId);
         contentValues.put(FavoriteCharacter.Entity.COLUMN_NAME, this.characterName);
         contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, this.characterImageUrl);
         contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, this.characterBio);
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, this.characterFavorite);
 
         observableDatabase.addFavorite(contentValues);
     }
 
     private void updateFavorite(FavoriteCharacter favoriteCharacter) {
-        favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars_black_18dp));
+        this.characterFavorite = favoriteCharacter.isFavorite();
+
+        if (favoriteCharacter.isFavorite()) {
+            favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars_black_18dp));
+        } else {
+            favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_rate_black_18dp));
+        }
     }
 
     @Override

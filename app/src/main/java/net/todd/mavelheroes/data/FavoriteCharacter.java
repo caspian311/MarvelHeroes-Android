@@ -15,14 +15,16 @@ public class FavoriteCharacter {
     private final String characterId;
     private final String name;
     private final String bio;
+    private final boolean favorite;
     private final String imageUrl;
 
-    public FavoriteCharacter(Long id, String characterId, String name, String imageUrl, String bio) {
+    public FavoriteCharacter(Long id, String characterId, String name, String imageUrl, String bio, boolean favorite) {
         this.id = id;
         this.characterId = characterId;
         this.name = name;
         this.imageUrl = imageUrl;
         this.bio = bio;
+        this.favorite = favorite;
     }
 
     public Long getId() { return id; }
@@ -35,12 +37,15 @@ public class FavoriteCharacter {
 
     public String getName() { return name; }
 
+    public boolean isFavorite() { return favorite; }
+
     public static class Entity implements BaseColumns {
         public static final String TABLE_NAME = "favorite_characters";
         public static final String COLUMN_CHARACTER_ID = "character_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_IMAGE_URL = "image_url";
         public static final String COLUMN_BIO = "bio";
+        public static final String COLUMN_FAVORITE = "favorite";
     }
 
     public static final Func1<? super SqlBrite.Query, ? extends List<FavoriteCharacter>> QUERY_MAP = new Func1<SqlBrite.Query, List<FavoriteCharacter>>() {
@@ -56,8 +61,9 @@ public class FavoriteCharacter {
                         String name = cursor.getString(cursor.getColumnIndexOrThrow(Entity.COLUMN_NAME));
                         String imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(Entity.COLUMN_IMAGE_URL));
                         String bio = cursor.getString(cursor.getColumnIndexOrThrow(Entity.COLUMN_BIO));
+                        Boolean favorite = cursor.getInt(cursor.getColumnIndexOrThrow(Entity.COLUMN_FAVORITE)) == 1;
 
-                        marvelCharacters.add(new FavoriteCharacter(id, characterId, name, imageUrl, bio));
+                        marvelCharacters.add(new FavoriteCharacter(id, characterId, name, imageUrl, bio, favorite));
                     }
                 }
             }
