@@ -1,11 +1,15 @@
 package net.todd.mavelheroes.character;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,6 +40,13 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     ObservableDatabase observableDatabase;
 
     private CompositeSubscription subscription;
+    private FloatingActionButton favoriteFab;
+
+    private String characterName;
+    private String characterBio;
+    private String characterImageUrl;
+    private String characterId;
+    private View.OnClickListener fabClickListener;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -46,19 +57,10 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
-
-        mainPresenter.setView(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
-        String characterId = getArguments().getString(CHARACTER_ID);
+        this.characterId = getArguments().getString(CHARACTER_ID);
 
         if (subscription != null) {
             subscription.unsubscribe();
@@ -68,16 +70,35 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateFavorite));
 
+        favoriteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favoriteToggle();
+            }
+        });
+
         mainPresenter.populateScreen(characterId);
     }
 
+    public void favoriteToggle() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, this.characterId);
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_NAME, this.characterName);
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, this.characterImageUrl);
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, this.characterBio);
+
+        observableDatabase.addFavorite(contentValues);
+    }
+
     private void updateFavorite(FavoriteCharacter favoriteCharacter) {
-        // TODO finish up UI
+        favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars_black_18dp));
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        favoriteFab.setOnClickListener(null);
 
         subscription.unsubscribe();
         subscription = null;
@@ -85,7 +106,15 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.character_fragment, container, false);
+        View view = inflater.inflate(R.layout.character_fragment, container, false);
+
+        ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
+
+        favoriteFab = (FloatingActionButton)view.findViewById(R.id.favorite_fab);
+
+        mainPresenter.setView(this);
+
+        return view;
     }
 
     @Override
@@ -94,16 +123,19 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     }
 
     public void populateImage(String imagePath) {
+        this.characterImageUrl = imagePath;
         ImageView imageView = (ImageView) getView().findViewById(R.id.character_image);
         Glide.with(this).load(imagePath).into(imageView);
     }
 
     public void populateName(String name) {
+        this.characterName = name;
         TextView characterNameTextView = (TextView) getView().findViewById(R.id.character_name);
         characterNameTextView.setText(name);
     }
 
     public void populateBio(String bio) {
+        this.characterBio = bio;
         TextView characterNameTextView = (TextView) getView().findViewById(R.id.bio);
         characterNameTextView.setText(bio);
     }

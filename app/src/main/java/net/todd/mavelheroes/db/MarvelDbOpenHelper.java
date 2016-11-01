@@ -30,8 +30,10 @@ public class MarvelDbOpenHelper extends SQLiteOpenHelper{
             CREATE_FAVORITES_SQL = new StringBuilder()
                     .append("CREATE TABLE ").append(FavoriteCharacter.Entity.TABLE_NAME).append(" (")
                     .append(FavoriteCharacter.Entity._ID).append(" INTEGER PRIMARY KEY, ")
-                    .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT ")
-                    .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT ")
+                    .append(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID).append(" TEXT, ")
+                    .append(FavoriteCharacter.Entity.COLUMN_IMAGE_URL).append(" TEXT, ")
+                    .append(FavoriteCharacter.Entity.COLUMN_NAME).append(" TEXT, ")
+                    .append(FavoriteCharacter.Entity.COLUMN_BIO).append(" TEXT ")
                     .append(")")
                     .toString();
         }
