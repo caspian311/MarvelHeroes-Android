@@ -1,6 +1,10 @@
 package net.todd.mavelheroes;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import net.todd.mavelheroes.db.ObservableDatabase;
 import net.todd.mavelheroes.service.ApiLoggerInterceptor;
@@ -13,7 +17,9 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.schedulers.Schedulers;
 
 @Module
 public class ApplicationModule {
@@ -38,6 +44,8 @@ public class ApplicationModule {
 
     @Provides
     public MarvelService marvelService() {
+        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
+
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(new MarvelApiInterceptor())
                 .addInterceptor(new ApiLoggerInterceptor())
@@ -46,6 +54,7 @@ public class ApplicationModule {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(rxAdapter)
                 .client(httpClient)
                 .build();
 

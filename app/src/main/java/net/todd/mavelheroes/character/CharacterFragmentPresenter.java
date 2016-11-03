@@ -11,6 +11,9 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView> {
     private final MarvelService marvelService;
@@ -23,34 +26,27 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
     public void populateScreen(String characterId) {
         getView().showWaiting();
 
-        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
-            @Override
-            public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                getView().hideWaiting();
-
-                if (response.isSuccessful()) {
-                    MarvelCharacter character = response.body().getData().getResults().get(0);
-
-                    getView().populateName(character.getName());
-                    getView().populateBio(character.getDescription());
-                    getView().populateImage(character.getImagePath());
-                } else {
-                    try {
-                        getView().showError(response.errorBody().string());
-                    } catch (Exception e) {
-                        getView().showError(e);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
-                getView().showError(t);
-            }
-        });
+        fetchData(characterId);
     }
 
-    private Call<MarvelCharacterResponse> fetchData(String characterId) {
-        return marvelService.getCharacter(characterId);
+    private void fetchData(String characterId) {
+        marvelService.getCharacter(characterId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::handleData, this::handleError);
+    }
+
+    private void handleError(Throwable throwable) {
+        getView().showError(throwable);
+    }
+
+    private void handleData(MarvelCharacterResponse response) {
+        getView().hideWaiting();
+
+        MarvelCharacter character = response.getData().getResults().get(0);
+
+        getView().populateName(character.getName());
+        getView().populateBio(character.getDescription());
+        getView().populateImage(character.getImagePath());
     }
 }
