@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class CharacterPresenter extends Presenter<CharacterView> {
     private MarvelService marvelService;
@@ -24,29 +26,22 @@ public class CharacterPresenter extends Presenter<CharacterView> {
     }
 
     public void populateCharactersForComic(String comicId) {
-        marvelService.getCharacterForComic(comicId).enqueue(new Callback<MarvelCharacterResponse>() {
-            @Override
-            public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                if (response.isSuccessful()) {
-                    List<MarvelCharacter> data = response.body().getData().getResults();
-                    List<String> ids = new ArrayList<String>();
-                    for (MarvelCharacter character : data) {
-                        ids.add(character.getId());
-                    }
-                    getView().displayCharacters(ids);
-                } else {
-                    try {
-                        getView().showError(response.errorBody().string());
-                    } catch (Exception e) {
-                        getView().showError(e);
-                    }
-                }
-            }
+        marvelService.getCharacterForComic(comicId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleData, this::handleError);
+    }
 
-            @Override
-            public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
-                getView().showError(t);
-            }
-        });
+    private void handleData(MarvelCharacterResponse response) {
+        List<MarvelCharacter> data = response.getData().getResults();
+        List<String> ids = new ArrayList<String>();
+        for (MarvelCharacter character : data) {
+            ids.add(character.getId());
+        }
+        getView().displayCharacters(ids);
+    }
+
+    private void handleError(Throwable throwable) {
+        getView().showError(throwable);
     }
 }

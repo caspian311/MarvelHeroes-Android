@@ -14,8 +14,8 @@ public interface MarvelService {
     Observable<MarvelCharacterResponse> getCharacter(@Path("character_id") String characterId);
 
     @GET("series/{commic_id}/characters")
-    Call<MarvelCharacterResponse> getCharacterForComic(@Path("commic_id") String comicId);
+    Observable<MarvelCharacterResponse> getCharacterForComic(@Path("commic_id") String comicId);
 
     @GET("series")
-    Call<MarvelComicsResponse> getComics(@Query("characters")String characterId);
+    Observable<MarvelComicsResponse> getComics(@Query("characters")String characterId);
 }
