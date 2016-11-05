@@ -69,12 +69,7 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateFavorite));
 
-        favoriteFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                favoriteToggle();
-            }
-        });
+        favoriteFab.setOnClickListener(v -> favoriteToggle());
 
         mainPresenter.populateScreen(characterId);
     }

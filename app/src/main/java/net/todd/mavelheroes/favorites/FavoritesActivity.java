@@ -1,4 +1,4 @@
-package net.todd.mavelheroes.character;
+package net.todd.mavelheroes.favorites;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,17 +11,18 @@ import android.widget.Toast;
 import net.todd.mavelheroes.ActivityModule;
 import net.todd.mavelheroes.DaggerApp;
 import net.todd.mavelheroes.R;
+import net.todd.mavelheroes.character.CharacterFragment;
 import net.todd.mavelheroes.comics.ComicsActivity;
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.favorites.FavoritesPresenter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class CharacterActivity extends AppCompatActivity implements CharacterView {
-    public static final String FETCHING_CHARACTER_FOR_COMIC_DATA = "Fetching characters ids";
-
+public class FavoritesActivity extends AppCompatActivity implements FavoritesView {
     @Inject
-    CharacterPresenter characterPresenter;
+    FavoritesPresenter favoritesPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +32,14 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
 
         setContentView(R.layout.character_activity);
 
-        characterPresenter.setView(this);
+        favoritesPresenter.setView(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        String comicId = getIntent().getStringExtra(ComicsActivity.COMIC_ID);
-        characterPresenter.populateCharactersForComic(comicId);
+        favoritesPresenter.populateCharacters();
     }
 
     @Override
@@ -47,13 +47,14 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
         super.onPause();
     }
 
-    public void displayCharacters(final List<String> characters) {
+    @Override
+    public void displayFavorites(final List<FavoriteCharacter> characters) {
         ViewPager pager = (ViewPager) findViewById(R.id.character_pager);
 
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return CharacterFragment.newInstance(characters.get(position));
+                return FavoritesFragment.newInstance(characters.get(position));
             }
 
             @Override
@@ -61,10 +62,5 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
                 return characters.size();
             }
         });
-    }
-
-    public void showError(Throwable t) {
-        Log.e(FETCHING_CHARACTER_FOR_COMIC_DATA, "Error", t);
-        Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
     }
 }

@@ -17,4 +17,6 @@ public interface ComicsView extends PresenterView {
     void hideEmptyView();
 
     void showEmptyView();
+
+    void goToFavorites();
 }

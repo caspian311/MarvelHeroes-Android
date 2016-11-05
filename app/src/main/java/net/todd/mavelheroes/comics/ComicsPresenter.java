@@ -55,4 +55,8 @@ public class ComicsPresenter extends Presenter<ComicsView> {
     public void selectComic(String id) {
         getView().goToComic(id);
     }
+
+    public void goToFavorites() {
+        getView().goToFavorites();
+    }
 }
