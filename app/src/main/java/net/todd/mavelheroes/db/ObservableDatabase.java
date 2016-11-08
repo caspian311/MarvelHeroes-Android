@@ -45,4 +45,14 @@ public class ObservableDatabase {
         return briteDatabase.createQuery(FavoriteCharacter.Entity.TABLE_NAME, "SELECT * FROM " + FavoriteCharacter.Entity.TABLE_NAME + " WHERE " + FavoriteCharacter.Entity.COLUMN_FAVORITE + " = 1")
                 .map(FavoriteCharacter.QUERY_MAP);
     }
+
+    public void toggleFavorite(String characterId) {
+        Cursor c = briteDatabase.query("SELECT * FROM " + FavoriteCharacter.Entity.TABLE_NAME + " WHERE character_id = ?", "" + characterId);
+        if (c.moveToFirst()) {
+            int isFavorite = c.getInt(c.getColumnIndex(FavoriteCharacter.Entity.COLUMN_FAVORITE));
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, isFavorite == 0 ? 1 : 0);
+            briteDatabase.update(FavoriteCharacter.Entity.TABLE_NAME, contentValues, "character_id = ?", "" + characterId);
+        }
+    }
 }

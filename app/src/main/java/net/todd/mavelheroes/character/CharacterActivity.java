@@ -47,18 +47,18 @@ public class CharacterActivity extends AppCompatActivity implements CharacterVie
         super.onPause();
     }
 
-    public void displayCharacters(final List<String> characters) {
+    public void displayCharacters(final List<String> characterIds) {
         ViewPager pager = (ViewPager) findViewById(R.id.character_pager);
 
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return CharacterFragment.newInstance(characters.get(position));
+                return CharacterFragment.newInstance(characterIds.get(position));
             }
 
             @Override
             public int getCount() {
-                return characters.size();
+                return characterIds.size();
             }
         });
     }

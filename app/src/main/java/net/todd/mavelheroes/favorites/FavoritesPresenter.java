@@ -1,10 +1,7 @@
 package net.todd.mavelheroes.favorites;
 
 import net.todd.mavelheroes.Presenter;
-import net.todd.mavelheroes.data.FavoriteCharacter;
 import net.todd.mavelheroes.db.ObservableDatabase;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,10 +20,6 @@ public class FavoritesPresenter extends Presenter<FavoritesView> {
         observableDatabase.allFavorites()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleData);
-    }
-
-    private void handleData(List<FavoriteCharacter> favoriteCharacter) {
-        getView().displayFavorites(favoriteCharacter);
+                .subscribe(getView()::displayFavorites);
     }
 }
