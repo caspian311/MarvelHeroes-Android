@@ -86,6 +86,6 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
         contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, character.getDescription());
         contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, !isFavorite);
 
-        observableDatabase.addFavorite(contentValues);
+        observableDatabase.toggleFavorite(contentValues);
     }
 }

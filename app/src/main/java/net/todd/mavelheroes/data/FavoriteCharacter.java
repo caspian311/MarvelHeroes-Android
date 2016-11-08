@@ -1,5 +1,6 @@
 package net.todd.mavelheroes.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
@@ -46,6 +47,16 @@ public class FavoriteCharacter {
         public static final String COLUMN_IMAGE_URL = "image_url";
         public static final String COLUMN_BIO = "bio";
         public static final String COLUMN_FAVORITE = "favorite";
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Entity._ID, getId());
+        contentValues.put(Entity.COLUMN_CHARACTER_ID, getCharacterId());
+        contentValues.put(Entity.COLUMN_NAME, getName());
+        contentValues.put(Entity.COLUMN_BIO, getBio());
+        contentValues.put(Entity.COLUMN_IMAGE_URL, getImageUrl());
+        return contentValues;
     }
 
     public static final Func1<? super SqlBrite.Query, ? extends List<FavoriteCharacter>> QUERY_MAP = new Func1<SqlBrite.Query, List<FavoriteCharacter>>() {

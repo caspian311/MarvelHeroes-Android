@@ -11,7 +11,9 @@ import rx.subscriptions.CompositeSubscription;
 
 public class FavoritesFragmentPresenter extends Presenter<FavoritesFragmentView> {
     private final ObservableDatabase observableDatabase;
+
     private CompositeSubscription subscription;
+    private FavoriteCharacter favoriteCharacter;
 
     @Inject
     public FavoritesFragmentPresenter(ObservableDatabase observableDatabase) {
@@ -30,6 +32,7 @@ public class FavoritesFragmentPresenter extends Presenter<FavoritesFragmentView>
     }
 
     private void showFavorite(FavoriteCharacter character) {
+        this.favoriteCharacter = character;
         getView().populateName(character.getName());
         getView().populateImage(character.getImageUrl());
         getView().populateBio(character.getBio());
@@ -39,7 +42,6 @@ public class FavoritesFragmentPresenter extends Presenter<FavoritesFragmentView>
         } else {
             getView().unsetFavorite();
         }
-
     }
 
     public void unsubscribe() {
@@ -47,7 +49,7 @@ public class FavoritesFragmentPresenter extends Presenter<FavoritesFragmentView>
         subscription = null;
     }
 
-    public void toggleFavorite(String characterId) {
-        observableDatabase.toggleFavorite(characterId);
+    public void toggleFavorite() {
+        observableDatabase.toggleFavorite(favoriteCharacter.toContentValues());
     }
 }

@@ -24,10 +24,12 @@ public class ObservableDatabase {
         briteDatabase.setLoggingEnabled(true);
     }
 
-    public void addFavorite(ContentValues contentValues) {
+    public void toggleFavorite(ContentValues contentValues) {
         String characterId = contentValues.getAsString(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID);
         Cursor c = briteDatabase.query("SELECT * FROM " + FavoriteCharacter.Entity.TABLE_NAME + " WHERE character_id = ?", characterId);
-        if (c.getCount() > 0) {
+        if (c.moveToFirst()) {
+            int currentFavoriteStatus = c.getInt(c.getColumnIndex(FavoriteCharacter.Entity.COLUMN_FAVORITE));
+            contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, currentFavoriteStatus == 0 ? 1 : 0);
             briteDatabase.update(FavoriteCharacter.Entity.TABLE_NAME, contentValues, "character_id = ?", characterId);
         } else {
             briteDatabase.insert(FavoriteCharacter.Entity.TABLE_NAME, contentValues);
@@ -44,15 +46,5 @@ public class ObservableDatabase {
     public Observable<List<FavoriteCharacter>> allFavorites() {
         return briteDatabase.createQuery(FavoriteCharacter.Entity.TABLE_NAME, "SELECT * FROM " + FavoriteCharacter.Entity.TABLE_NAME + " WHERE " + FavoriteCharacter.Entity.COLUMN_FAVORITE + " = 1")
                 .map(FavoriteCharacter.QUERY_MAP);
-    }
-
-    public void toggleFavorite(String characterId) {
-        Cursor c = briteDatabase.query("SELECT * FROM " + FavoriteCharacter.Entity.TABLE_NAME + " WHERE character_id = ?", "" + characterId);
-        if (c.moveToFirst()) {
-            int isFavorite = c.getInt(c.getColumnIndex(FavoriteCharacter.Entity.COLUMN_FAVORITE));
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, isFavorite == 0 ? 1 : 0);
-            briteDatabase.update(FavoriteCharacter.Entity.TABLE_NAME, contentValues, "character_id = ?", "" + characterId);
-        }
     }
 }

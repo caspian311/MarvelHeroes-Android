@@ -56,7 +56,7 @@ public class FavoritesFragment extends Fragment implements FavoritesFragmentView
         String characterId = getArguments().getString(CHARACTER_ID);
         favoritesFragmentPresenter.showFavorite(characterId);
 
-        favoriteFab.setOnClickListener(v -> favoritesFragmentPresenter.toggleFavorite(characterId));
+        favoriteFab.setOnClickListener(v -> favoritesFragmentPresenter.toggleFavorite());
     }
 
     @Override
