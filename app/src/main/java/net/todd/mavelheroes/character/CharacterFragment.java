@@ -37,15 +37,9 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     @Inject
     ObservableDatabase observableDatabase;
 
-    private CompositeSubscription subscription;
     private FloatingActionButton favoriteFab;
 
-    private String characterName;
-    private String characterBio;
-    private String characterImageUrl;
     private String characterId;
-    private View.OnClickListener fabClickListener;
-    private boolean characterFavorite;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -61,35 +55,13 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
         this.characterId = getArguments().getString(CHARACTER_ID);
 
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
-        subscription = new CompositeSubscription();
-        subscription.add(observableDatabase.favoriteCharacter(characterId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateFavorite));
-
-        favoriteFab.setOnClickListener(v -> favoriteToggle());
-
         mainPresenter.populateScreen(characterId);
+
+        favoriteFab.setOnClickListener(v -> mainPresenter.favoriteToggle());
     }
 
-    public void favoriteToggle() {
-        this.characterFavorite = !this.characterFavorite;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, this.characterId);
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_NAME, this.characterName);
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, this.characterImageUrl);
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, this.characterBio);
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, this.characterFavorite);
-
-        observableDatabase.addFavorite(contentValues);
-    }
-
-    private void updateFavorite(FavoriteCharacter favoriteCharacter) {
-        this.characterFavorite = favoriteCharacter.isFavorite();
-
-        if (favoriteCharacter.isFavorite()) {
+    public void updateFavorite(boolean isFavorite) {
+        if (isFavorite) {
             favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars_black_18dp));
         } else {
             favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_rate_black_18dp));
@@ -102,8 +74,7 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
         favoriteFab.setOnClickListener(null);
 
-        subscription.unsubscribe();
-        subscription = null;
+        mainPresenter.unsubscribe();
     }
 
     @Override
@@ -125,26 +96,18 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     }
 
     public void populateImage(String imagePath) {
-        this.characterImageUrl = imagePath;
         ImageView imageView = (ImageView) getView().findViewById(R.id.character_image);
         Glide.with(this).load(imagePath).into(imageView);
     }
 
     public void populateName(String name) {
-        this.characterName = name;
         TextView characterNameTextView = (TextView) getView().findViewById(R.id.character_name);
         characterNameTextView.setText(name);
     }
 
     public void populateBio(String bio) {
-        this.characterBio = bio;
         TextView characterNameTextView = (TextView) getView().findViewById(R.id.bio);
         characterNameTextView.setText(bio);
-    }
-
-    public void showError(String errorMessage) {
-        Toast.makeText(this.getActivity(), "Error: " + errorMessage, Toast.LENGTH_LONG);
-        Log.e(FETCHING_CHARACTER_DATA, "Error: " + errorMessage);
     }
 
     public void showError(Throwable t) {
