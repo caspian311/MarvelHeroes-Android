@@ -4,17 +4,12 @@ import android.content.ContentValues;
 
 import net.todd.mavelheroes.Presenter;
 import net.todd.mavelheroes.data.FavoriteCharacter;
-import net.todd.mavelheroes.data.MarvelCharacter;
 import net.todd.mavelheroes.data.MarvelCharacterResponse;
 import net.todd.mavelheroes.db.ObservableDatabase;
 import net.todd.mavelheroes.service.MarvelService;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -24,7 +19,7 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
     private final ObservableDatabase observableDatabase;
 
     private CompositeSubscription subscription;
-    private MarvelCharacter character;
+    private FavoriteCharacter character;
     private boolean isFavorite;
 
     @Inject
@@ -69,8 +64,8 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
         character = response.getData().getResults().get(0);
 
         getView().populateName(character.getName());
-        getView().populateBio(character.getDescription());
-        getView().populateImage(character.getImagePath());
+        getView().populateBio(character.getBio());
+        getView().populateImage(character.getImageUrl());
     }
 
     public void unsubscribe() {
@@ -80,10 +75,10 @@ public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView>
 
     public void favoriteToggle() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, character.getId());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, character.getCharacterId());
         contentValues.put(FavoriteCharacter.Entity.COLUMN_NAME, character.getName());
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, character.getImagePath());
-        contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, character.getDescription());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, character.getImageUrl());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, character.getBio());
         contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, !isFavorite);
 
         observableDatabase.toggleFavorite(contentValues);

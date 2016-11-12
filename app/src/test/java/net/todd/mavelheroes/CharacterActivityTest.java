@@ -3,10 +3,11 @@ package net.todd.mavelheroes;
 
 import android.widget.TextView;
 
-import net.todd.mavelheroes.net.todd.mavelheroes.data.CharacterThumbnail;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterData;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.character.CharacterActivity;
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.data.MarvelCharacterData;
+import net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.service.MarvelService;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,11 +23,13 @@ import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import java.util.Arrays;
+import java.util.List;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -41,7 +44,7 @@ public class CharacterActivityTest {
     @Mock
     private MarvelService mockMarvelService;
     @Mock
-    private Call<MarvelCharacterResponse> mockCall;
+    private Observable<MarvelCharacterResponse> mockCall;
     @Captor
     private ArgumentCaptor<Callback<MarvelCharacterResponse>> responseArgumentCaptor;
 
@@ -65,7 +68,7 @@ public class CharacterActivityTest {
         ActivityController<CharacterActivity> controller = Robolectric.buildActivity(CharacterActivity.class);
         CharacterActivity testObject = controller.create().start().resume().get();
 
-        verify(mockCall).enqueue(responseArgumentCaptor.capture());
+//        verify(mockCall).enqueue(responseArgumentCaptor.capture());
         Callback callback = responseArgumentCaptor.getValue();
 
         String characterId = "character id";
@@ -81,7 +84,13 @@ public class CharacterActivityTest {
         assertEquals(bioData, textView.getText().toString());
     }
 
-    private MarvelCharacterResponse buildMarvelResponse(String id, String name, String bio) {
-        return new MarvelCharacterResponse(new MarvelCharacterData(Arrays.asList(new MarvelCharacter(id, name, bio, new CharacterThumbnail("", "")))));
+    private <T> MarvelCharacterResponse buildMarvelResponse(String id, String name, String bio) {
+        FavoriteCharacter foo = new FavoriteCharacter.Builder().characterId(id).name(name).description(bio).imageUrl("").build();
+        List<FavoriteCharacter> bar = Arrays.asList(foo);
+        MarvelCharacterData baz = new MarvelCharacterData();
+        baz.setResults(bar);
+        MarvelCharacterResponse asdf = new MarvelCharacterResponse();
+        asdf.setData(baz);
+        return asdf;
     }
 }

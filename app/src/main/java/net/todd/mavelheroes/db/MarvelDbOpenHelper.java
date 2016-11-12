@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import net.todd.mavelheroes.data.FavoriteCharacter;
-import net.todd.mavelheroes.data.MarvelCharacter;
 
 public class MarvelDbOpenHelper extends SQLiteOpenHelper{
     private static final String DB_NAME = "MarvelComics.db";

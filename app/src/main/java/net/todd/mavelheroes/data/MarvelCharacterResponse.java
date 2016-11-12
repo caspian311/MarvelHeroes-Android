@@ -6,4 +6,7 @@ public class MarvelCharacterResponse {
     public MarvelCharacterData getData() {
         return data;
     }
+    public void setData(MarvelCharacterData data) {
+        this.data = data;
+    }
 }

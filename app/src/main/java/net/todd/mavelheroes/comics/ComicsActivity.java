@@ -92,10 +92,4 @@ public class ComicsActivity extends Activity implements ComicsView {
         Log.e(FETCHING_COMIC_DATA, "Error", t);
         Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
     }
-
-    @Override
-    public void showError(String errorMessage) {
-        Log.e(FETCHING_COMIC_DATA, "Error: " + errorMessage);
-        Toast.makeText(this, "Error: " + errorMessage, Toast.LENGTH_LONG);
-    }
 }

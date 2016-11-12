@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
+import com.google.gson.annotations.SerializedName;
 import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
@@ -12,20 +13,21 @@ import java.util.List;
 import rx.functions.Func1;
 
 public class FavoriteCharacter {
-    private final Long id;
-    private final String characterId;
-    private final String name;
-    private final String bio;
-    private final boolean favorite;
-    private final String imageUrl;
+    @SerializedName("db_id")
+    private Long id;
+    private boolean favorite;
+    private String imageUrl;
 
-    public FavoriteCharacter(Long id, String characterId, String name, String imageUrl, String bio, boolean favorite) {
-        this.id = id;
-        this.characterId = characterId;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.bio = bio;
-        this.favorite = favorite;
+    @SerializedName("description")
+    private String bio;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("id")
+    private String characterId;
+    @SerializedName("thumbnail")
+    private CharacterThumbnail thumbnail;
+
+    public FavoriteCharacter() {
     }
 
     public Long getId() { return id; }
@@ -34,7 +36,7 @@ public class FavoriteCharacter {
 
     public String getBio() { return bio; }
 
-    public String getImageUrl() { return imageUrl; }
+    public String getImageUrl() { return imageUrl == null ? thumbnail.getImagePath() : imageUrl; }
 
     public String getName() { return name; }
 
@@ -47,6 +49,45 @@ public class FavoriteCharacter {
         public static final String COLUMN_IMAGE_URL = "image_url";
         public static final String COLUMN_BIO = "bio";
         public static final String COLUMN_FAVORITE = "favorite";
+    }
+
+    public static class Builder {
+        private final FavoriteCharacter favoriteCharacter = new FavoriteCharacter();
+
+        public Builder id(long id) {
+            favoriteCharacter.id = id;
+            return this;
+        }
+
+        public Builder characterId(String characterId) {
+            favoriteCharacter.characterId = characterId;
+            return this;
+        }
+
+        public Builder name(String name) {
+            favoriteCharacter.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            favoriteCharacter.bio = description;
+            return this;
+        }
+
+        public Builder imageUrl(String imageUrl) {
+            favoriteCharacter.imageUrl = imageUrl;
+            return this;
+        }
+
+
+        public Builder favorite(boolean favorite) {
+            favoriteCharacter.favorite = favorite;
+            return this;
+        }
+
+        public FavoriteCharacter build() {
+            return favoriteCharacter;
+        }
     }
 
     public ContentValues toContentValues() {
@@ -74,7 +115,14 @@ public class FavoriteCharacter {
                         String bio = cursor.getString(cursor.getColumnIndexOrThrow(Entity.COLUMN_BIO));
                         Boolean favorite = cursor.getInt(cursor.getColumnIndexOrThrow(Entity.COLUMN_FAVORITE)) == 1;
 
-                        marvelCharacters.add(new FavoriteCharacter(id, characterId, name, imageUrl, bio, favorite));
+                        marvelCharacters.add(new Builder()
+                                .id(id)
+                                .characterId(characterId)
+                                .description(bio)
+                                .name(name)
+                                .imageUrl(imageUrl)
+                                .favorite(favorite)
+                                .build());
                     }
                 }
             }

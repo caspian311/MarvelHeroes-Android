@@ -3,9 +3,12 @@ package net.todd.mavelheroes.data;
 import java.util.List;
 
 public class MarvelCharacterData {
-    private List<MarvelCharacter> results;
+    private List<FavoriteCharacter> results;
 
-    public List<MarvelCharacter> getResults() {
+    public List<FavoriteCharacter> getResults() {
         return results;
+    }
+    public void setResults(List<FavoriteCharacter> results) {
+        this.results = results;
     }
 }
