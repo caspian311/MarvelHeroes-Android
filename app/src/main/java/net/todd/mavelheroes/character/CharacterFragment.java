@@ -1,9 +1,11 @@
 package net.todd.mavelheroes.character;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +19,13 @@ import com.bumptech.glide.Glide;
 import net.todd.mavelheroes.ActivityModule;
 import net.todd.mavelheroes.DaggerApp;
 import net.todd.mavelheroes.R;
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.db.ObservableDatabase;
 
 import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class CharacterFragment extends Fragment implements CharacterFragmentView {
@@ -27,6 +34,12 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
 
     @Inject
     CharacterFragmentPresenter mainPresenter;
+    @Inject
+    ObservableDatabase observableDatabase;
+
+    private FloatingActionButton favoriteFab;
+
+    private String characterId;
 
     public static CharacterFragment newInstance(String characterId) {
         CharacterFragment fragment = new CharacterFragment();
@@ -37,25 +50,44 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
-
-        mainPresenter.setView(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
-        String characterId = getArguments().getString(CHARACTER_ID);
+        this.characterId = getArguments().getString(CHARACTER_ID);
+
         mainPresenter.populateScreen(characterId);
+
+        favoriteFab.setOnClickListener(v -> mainPresenter.favoriteToggle());
+    }
+
+    public void updateFavorite(boolean isFavorite) {
+        if (isFavorite) {
+            favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_stars_black_18dp));
+        } else {
+            favoriteFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_rate_black_18dp));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        favoriteFab.setOnClickListener(null);
+
+        mainPresenter.unsubscribe();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.character_fragment, container, false);
+        View view = inflater.inflate(R.layout.character_fragment, container, false);
+
+        ((DaggerApp) getActivity().getApplication()).getApplicationComponent().plus(new ActivityModule()).inject(this);
+
+        favoriteFab = (FloatingActionButton)view.findViewById(R.id.favorite_fab);
+
+        mainPresenter.setView(this);
+
+        return view;
     }
 
     @Override
@@ -76,11 +108,6 @@ public class CharacterFragment extends Fragment implements CharacterFragmentView
     public void populateBio(String bio) {
         TextView characterNameTextView = (TextView) getView().findViewById(R.id.bio);
         characterNameTextView.setText(bio);
-    }
-
-    public void showError(String errorMessage) {
-        Toast.makeText(this.getActivity(), "Error: " + errorMessage, Toast.LENGTH_LONG);
-        Log.e(FETCHING_CHARACTER_DATA, "Error: " + errorMessage);
     }
 
     public void showError(Throwable t) {

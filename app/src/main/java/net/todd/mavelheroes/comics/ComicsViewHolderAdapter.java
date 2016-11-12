@@ -6,17 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.todd.mavelheroes.R;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComicsViewHolderAdapter extends RecyclerView.Adapter<MarvelComicViewHolder> {
-    private final List<MarvelComic> comics = new ArrayList<>();
-    private final ItemClickedListener itemClickedListener;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
-    public ComicsViewHolderAdapter(ItemClickedListener itemClickedListener) {
+public class ComicsViewHolderAdapter extends RecyclerView.Adapter<MarvelViewHolder> {
+    private static final int FAVORITE_TYPE = 0;
+    private static final int COMIC_TYPE = 1;
+    private final List<MarvelComic> comics = new ArrayList<>();
+    private final Action1<Integer> itemClickedListener;
+    private final Action0 favoritesClickListener;
+
+    public ComicsViewHolderAdapter(Action1<Integer> itemClickedListener, Action0 favoritesClickListener) {
         this.itemClickedListener = itemClickedListener;
+        this.favoritesClickListener = favoritesClickListener;
     }
 
     public void addAll(List<MarvelComic> allComics) {
@@ -26,14 +33,24 @@ public class ComicsViewHolderAdapter extends RecyclerView.Adapter<MarvelComicVie
     }
 
     @Override
-    public MarvelComicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comic_row, parent, false);
-        return new MarvelComicViewHolder(view, itemClickedListener);
+    public MarvelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == COMIC_TYPE) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comic_row, parent, false);
+            return new MarvelComicViewHolder(view, itemClickedListener);
+        } else  {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_row, parent, false);
+            return new FavoriteCharactersViewHolder(view, favoritesClickListener);
+        }
     }
 
     @Override
-    public void onBindViewHolder(MarvelComicViewHolder holder, int position) {
+    public void onBindViewHolder(MarvelViewHolder holder, int position) {
         holder.bindView(comics.get(position));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? FAVORITE_TYPE : COMIC_TYPE;
     }
 
     @Override

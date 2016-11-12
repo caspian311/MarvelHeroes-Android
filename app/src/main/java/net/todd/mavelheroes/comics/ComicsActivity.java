@@ -15,7 +15,8 @@ import net.todd.mavelheroes.ActivityModule;
 import net.todd.mavelheroes.DaggerApp;
 import net.todd.mavelheroes.R;
 import net.todd.mavelheroes.character.CharacterActivity;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.favorites.FavoritesActivity;
 
 import java.util.List;
 
@@ -42,13 +43,10 @@ public class ComicsActivity extends Activity implements ComicsView {
         RecyclerView comicsListView = (RecyclerView) findViewById(R.id.comics_list_view);
         comicsListView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new ComicsViewHolderAdapter(new ItemClickedListener() {
-            @Override
-            public void itemClicked(int position) {
-                String selectedComicId = adapter.getComic(position).getId();
-                comicsPresenter.selectComic(selectedComicId);
-            }
-        });
+        adapter = new ComicsViewHolderAdapter(position -> {
+            String selectedComicId = adapter.getComic(position).getId();
+            comicsPresenter.selectComic(selectedComicId);
+        }, () -> comicsPresenter.goToFavorites());
         comicsListView.setAdapter(adapter);
     }
 
@@ -78,8 +76,14 @@ public class ComicsActivity extends Activity implements ComicsView {
 
     @Override
     public void goToComic(String comicId) {
-        Intent intent = new Intent(ComicsActivity.this, CharacterActivity.class);
+        Intent intent = new Intent(this, CharacterActivity.class);
         intent.putExtra(COMIC_ID, comicId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goToFavorites() {
+        Intent intent = new Intent(this, FavoritesActivity.class);
         startActivity(intent);
     }
 
@@ -87,11 +91,5 @@ public class ComicsActivity extends Activity implements ComicsView {
     public void showError(Throwable t) {
         Log.e(FETCHING_COMIC_DATA, "Error", t);
         Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_LONG);
-    }
-
-    @Override
-    public void showError(String errorMessage) {
-        Log.e(FETCHING_COMIC_DATA, "Error: " + errorMessage);
-        Toast.makeText(this, "Error: " + errorMessage, Toast.LENGTH_LONG);
     }
 }

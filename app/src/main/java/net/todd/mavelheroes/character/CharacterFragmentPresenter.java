@@ -1,55 +1,86 @@
 package net.todd.mavelheroes.character;
 
+import android.content.ContentValues;
+
 import net.todd.mavelheroes.Presenter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.data.FavoriteCharacter;
+import net.todd.mavelheroes.data.MarvelCharacterResponse;
+import net.todd.mavelheroes.db.ObservableDatabase;
 import net.todd.mavelheroes.service.MarvelService;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class CharacterFragmentPresenter extends Presenter<CharacterFragmentView> {
     private final MarvelService marvelService;
+    private final ObservableDatabase observableDatabase;
+
+    private CompositeSubscription subscription;
+    private FavoriteCharacter character;
+    private boolean isFavorite;
 
     @Inject
-    public CharacterFragmentPresenter(MarvelService marvelService) {
+    public CharacterFragmentPresenter(MarvelService marvelService, ObservableDatabase observableDatabase) {
         this.marvelService = marvelService;
+        this.observableDatabase = observableDatabase;
     }
 
     public void populateScreen(String characterId) {
         getView().showWaiting();
 
-        fetchData(characterId).enqueue(new Callback<MarvelCharacterResponse>() {
-            @Override
-            public void onResponse(Call<MarvelCharacterResponse> call, Response<MarvelCharacterResponse> response) {
-                getView().hideWaiting();
+        fetchData(characterId);
 
-                if (response.isSuccessful()) {
-                    MarvelCharacter character = response.body().getData().getResults().get(0);
-
-                    getView().populateName(character.getName());
-                    getView().populateBio(character.getDescription());
-                    getView().populateImage(character.getImagePath());
-                } else {
-                    try {
-                        getView().showError(response.errorBody().string());
-                    } catch (Exception e) {
-                        getView().showError(e);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MarvelCharacterResponse> call, Throwable t) {
-                getView().showError(t);
-            }
-        });
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        subscription = new CompositeSubscription();
+        subscription.add(observableDatabase.favoriteCharacter(characterId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updateFavorite));
     }
 
-    private Call<MarvelCharacterResponse> fetchData(String characterId) {
-        return marvelService.getCharacter(characterId);
+    private void updateFavorite(FavoriteCharacter favoriteCharacter) {
+        isFavorite = favoriteCharacter.isFavorite();
+        getView().updateFavorite(favoriteCharacter.isFavorite());
+    }
+
+    private void fetchData(String characterId) {
+        marvelService.getCharacter(characterId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleData, this::handleError);
+    }
+
+    private void handleError(Throwable throwable) {
+        getView().showError(throwable);
+    }
+
+    private void handleData(MarvelCharacterResponse response) {
+        getView().hideWaiting();
+
+        character = response.getData().getResults().get(0);
+
+        getView().populateName(character.getName());
+        getView().populateBio(character.getBio());
+        getView().populateImage(character.getImageUrl());
+    }
+
+    public void unsubscribe() {
+        subscription.unsubscribe();
+        subscription = null;
+    }
+
+    public void favoriteToggle() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_CHARACTER_ID, character.getCharacterId());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_NAME, character.getName());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_IMAGE_URL, character.getImageUrl());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_BIO, character.getBio());
+        contentValues.put(FavoriteCharacter.Entity.COLUMN_FAVORITE, !isFavorite);
+
+        observableDatabase.toggleFavorite(contentValues);
     }
 }

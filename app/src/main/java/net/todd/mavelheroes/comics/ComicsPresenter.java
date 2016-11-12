@@ -1,8 +1,8 @@
 package net.todd.mavelheroes.comics;
 
 import net.todd.mavelheroes.Presenter;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComic;
-import net.todd.mavelheroes.net.todd.mavelheroes.data.MarvelComicsResponse;
+import net.todd.mavelheroes.data.MarvelComic;
+import net.todd.mavelheroes.data.MarvelComicsResponse;
 import net.todd.mavelheroes.service.MarvelService;
 
 import java.util.List;
@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ComicsPresenter extends Presenter<ComicsView> {
     private MarvelService marvelService;
@@ -22,39 +24,39 @@ public class ComicsPresenter extends Presenter<ComicsView> {
     }
 
     public void populateScreen() {
-        /*
-         1009368 -> IronMan
-         1009718 -> Wolverine
-         1009725 -> X-Man
-         1010733 -> Star-Lord
-         */
         getView().showEmptyView();
-        marvelService.getComics("1009368").enqueue(new Callback<MarvelComicsResponse>() {
 
-            @Override
-            public void onResponse(Call<MarvelComicsResponse> call, Response<MarvelComicsResponse> response) {
-                if (response.isSuccessful()) {
-                    List<MarvelComic> comics = response.body().getData().getResults();
-                    getView().hideEmptyView();
-                    getView().setComics(comics);
+        fetchData();
+    }
 
-                } else {
-                    try {
-                        getView().showError(response.errorBody().string());
-                    } catch (Exception e) {
-                        getView().showError(e);
-                    }
-                }
-            }
+    /*
+     1009368 -> IronMan
+     1009718 -> Wolverine
+     1009718 -> X-Man
+     1010733 -> Star-Lord
+     */
+    private void fetchData() {
+        marvelService.getComics("1009368,1009718,1009718,1010733")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::handleData, this::handleError);
+    }
 
-            @Override
-            public void onFailure(Call<MarvelComicsResponse> call, Throwable t) {
-                getView().showError(t);
-            }
-        });
+    private void handleError(Throwable throwable) {
+        getView().showError(throwable);
+    }
+
+    private void handleData(MarvelComicsResponse response) {
+        List<MarvelComic> comics = response.getData().getResults();
+        getView().hideEmptyView();
+        getView().setComics(comics);
     }
 
     public void selectComic(String id) {
         getView().goToComic(id);
+    }
+
+    public void goToFavorites() {
+        getView().goToFavorites();
     }
 }
